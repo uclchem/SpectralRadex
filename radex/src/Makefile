@@ -28,8 +28,8 @@ $(EXEC): $(OBJECTS) solver.o  Makefile main.f90
 	strip $@
 
 python:  $(OBJECTS) solver.o  Makefile wrap.f90
-	python3 -m numpy.f2py -c --fcompiler=${f2pyFC} $(OBJECTS) -m radex wrap.f90
-	mv *${EXT_SUFFIX} ../radex.so
+	python3 -m numpy.f2py -c --fcompiler=${f2pyFC} $(OBJECTS) -m radexwrap wrap.f90
+	mv *${EXT_SUFFIX} ../radexwrap.so
 
 %.o: %.f90 Makefile
 	$(COMPILE.F) $*.f90 -o $@

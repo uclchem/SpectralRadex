@@ -13,7 +13,7 @@
 !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
 
-SUBROUTINE RADEX(inputDictionary,nlines,lineOutputs)
+SUBROUTINE RADEX(inputDictionary,nlines,Qup,Qlow,lineOutputs)
 USE IO
 USE Solver
 USE Background
@@ -22,9 +22,10 @@ IMPLICIT NONE
     CHARACTER(*) :: inputDictionary
     INTEGER :: niter,nlines,iline   ! iteration counters
     DOUBLE PRECISION :: lineOutputs(10,500)
+    CHARACTER(6) :: Qup(3000),Qlow(3000)
     LOGICAL :: conv    ! are we converged?
     !f2py intent(in) inputDictionary
-    !f2py intent(out) nlines, lineOutputs
+    !f2py intent(out) nlines, Qup,Qlow,lineOutputs
 
     !     Get input parameters
     IF (DEBUG) write(*,*) 'calling getinputs'
@@ -69,8 +70,9 @@ IMPLICIT NONE
         lineOutputs(:,niter)=(/eup(iline),spfreq(iline),wavelength(iline),&
             &tex(iline),taul(iline),antennaTemp(iline),upperPops(iline),lowerPops(iline),&
             &intensityKkms(iline),intensityErgs(iline)/)
+        Qup(niter)=upperQNum(iline)
+        Qlow(niter)=lowQNum(iline)
         niter=niter+1
       END IF
-        ! upperQNum(iline),lowQNum(iline)
     END DO
 END SUBROUTINE RADEX

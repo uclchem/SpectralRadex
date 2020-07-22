@@ -430,22 +430,19 @@ Contains
           tr = fk*xnu(iline)/dlog(wh)
         END IF
       END IF
-      !Check if line within output freq range
-      IF (spfreq(iline).lt.fmax.and.spfreq(iline).gt.fmin) THEN
-        wavel = clight / spfreq(iline) / 1.0d5 ! unit =  micron
-        kkms  = 1.0645*deltav*ta
-        ergs  = fgaus*kboltz*deltav*ta*(xnu(iline)**3.)
-        antennaTemp(iline)=ta
-        wavelength(iline)=wavel
-        lowerPops(iline)=(xpop(n))
-        upperPops(iline)=(xpop(m))
-        intensityKkms(iline)=(kkms/1.0d5)
-        intensityErgs(iline)=ergs
-        lowQNum(iline)=qnum(n)
-        upperQNum(iline)=qnum(m)
-        nlines=nlines+1
-      END IF
 
+      wavel = clight / spfreq(iline) / 1.0d5 ! unit =  micron
+      kkms  = 1.0645*deltav*ta
+      ergs  = fgaus*kboltz*deltav*ta*(xnu(iline)**3.)
+      antennaTemp(iline)=ta
+      wavelength(iline)=wavel
+      lowerPops(iline)=(xpop(n))
+      upperPops(iline)=(xpop(m))
+      intensityKkms(iline)=(kkms/1.0d5)
+      intensityErgs(iline)=ergs
+      lowQNum(iline)=qnum(n)
+      upperQNum(iline)=qnum(m)
+      nlines=nlines+1
     END DO
 
   END SUBROUTINE CalcOutputArrays

@@ -536,8 +536,6 @@ CONTAINS
           READ(inputValue,*) molfile
           IF ((molfile(1:1).ne.'/').and.(molfile(1:1).ne.'.'))&
             &     molfile = radat(1:length(radat))//molfile(1:length(molfile))
-        CASE('outfile')
-          READ(inputValue,*) outfile
         CASE('fmin')
           READ(inputValue,*) fmin
         CASE('fmax')
@@ -567,20 +565,26 @@ CONTAINS
             WRITE(*,*)'Please enter a column density between 1e5 and 1e25'
             STOP
           END IF
-        CASE('H2')
+        CASE('h2')
           READ(inputValue,*) density(1)
-        CASE('P-H2')
+        CASE('p-h2')
           READ(inputValue,*) density(2)
-       CASE('O-H2')
+       CASE('o-h2')
           READ(inputValue,*) density(3)
-        CASE('E-')
+        CASE('e-')
           READ(inputValue,*) density(4)
-        CASE('H')
+        CASE('h')
           READ(inputValue,*) density(5)
-        CASE('HE')
+        CASE('he')
           READ(inputValue,*) density(6)
-        CASE('H+')
+        CASE('h+')
           READ(inputValue,*) density(7)
+        CASE DEFAULT
+          write(*,*) "Unknown parameter in input dictionary, acceptable parameters are:"
+          write(*,*) "molfile, tkin, tbg, cdmol, linewidth, h2, h, e-, p-h2, o-h2, h+"
+          write(*,*) "Input dictionary was:"
+          write(*,*) dictionary
+
       END SELECT
     END DO
     !Default values: DC / Lyman limit

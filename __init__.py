@@ -1,4 +1,4 @@
-from .Radex import radex
+from . import radex
 from pandas import DataFrame,read_csv
 import numpy as np
 from scipy.interpolate import interp1d
@@ -7,8 +7,8 @@ from matplotlib.pyplot import subplots
 import os 
 
 package_directory = os.path.dirname(os.path.abspath(__file__))
-print(package_directory)
-print(os.path.join(package_directory,"data/cch_line_catalog.csv"))
+
+
 light_speed=2.99792e5
 planck=6.62607e-34
 boltzman=1.38e-23
@@ -17,41 +17,8 @@ boltzman=1.38e-23
 lte_constants=(light_speed*light_speed*light_speed)/(8.515736*np.pi) 
 
 
-#This runs radex to get the excitation temperature and optical depth for every line
-def get_central_taus(column_density,h2_density,e_density,temperature,delta_v):
-	params={
-		"molfile":"c2h_h2_e.dat",
-		"fmin":80,
-		"fmax":400,
-		"tkin":temperature,
-		"H2":h2_density,
-		"E-":e_density,
-		"tbg":2.73,
-		"cdmol":column_density,
-		"linewidth":delta_v
-	}
-	columns=['E_UP (K)','freq','WAVEL (um)','T_ex','tau','T_R (K)','POP UP',
-			'POP LOW', 'FLUX (K*km/s)', 'FLUX (erg/cm2/s)']
-	  
-	nlines,output=radex.radex(params)
-	output=DataFrame(columns=columns,data=output[:,:nlines].T)
-	return output[["freq","tau","T_ex"]]
-
-#calculate the optical depth at all our observed frequencies for a given line
-#based on velocity relative to line centre
-def get_tau_dist(v0,delta_v,tau_0,velocities):
-	taus=np.exp(-4.0*np.log(2.0)*(((velocities-v0)**2.0)/(delta_v*delta_v)))
-	taus=taus*tau_0
-	return taus
-
-#Calculate raditaion temperature for a given excitation temperature
-def rad_temp(t,frequencies):
-	hvk=(planck*frequencies*1.0e9)/boltzman
-	hvk=hvk/(np.exp(hvk/t)-1)
-	return hvk
-
 #calculate the brightness temperature for each observed frequency for a given set of parameters
-def calculate_spectrum(col_dens,gas_dens,e_dens,gas_temp,v_0,delta_v,obs_freqs,radex=True):
+def calculate_spectrum(obs_freqs,v0,radex_params,radex=True):
 	#user supplies the observed frequency so doppler shift to emitted
 	#tau dist makes this unnecessary
 	emit_freqs=obs_freqs*(1.0+v_0/light_speed)
@@ -62,7 +29,7 @@ def calculate_spectrum(col_dens,gas_dens,e_dens,gas_temp,v_0,delta_v,obs_freqs,r
 	
 	#solve the radex model and get all line properties
 	if radex:
-		tau_0_df=get_central_taus(col_dens,gas_dens,e_dens,gas_temp,delta_v)
+		tau_0_df=get_radex_taus(radex_params)
 	else:
 		tau_0_df=get_lte_taus(col_dens,gas_temp,delta_v)
 							  
@@ -88,6 +55,29 @@ def calculate_spectrum(col_dens,gas_dens,e_dens,gas_temp,v_0,delta_v,obs_freqs,r
 	new_df["Intensity"]=(new_df["temp"]-rad_temp(2.73,emit_freqs))*(1.0-np.exp(-new_df["Intensity"]))
 	new_df["Intensity"]=new_df["Intensity"].fillna(0.0)
 	return new_df["Intensity"].values
+
+#This runs radex to get the excitation temperature and optical depth for every line
+def get_radex_taus(params):
+	columns=['E_UP (K)','freq','WAVEL (um)','T_ex','tau','T_R (K)','POP UP',
+			'POP LOW', 'FLUX (K*km/s)', 'FLUX (erg/cm2/s)']
+	  
+	output=radex.run(params)
+	return output[["freq","tau","T_ex"]]
+
+#calculate the optical depth at all our observed frequencies for a given line
+#based on velocity relative to line centre
+def get_tau_dist(v0,delta_v,tau_0,velocities):
+	taus=np.exp(-4.0*np.log(2.0)*(((velocities-v0)**2.0)/(delta_v*delta_v)))
+	taus=taus*tau_0
+	return taus
+
+#Calculate raditaion temperature for a given excitation temperature
+def rad_temp(t,frequencies):
+	hvk=(planck*frequencies*1.0e9)/boltzman
+	hvk=hvk/(np.exp(hvk/t)-1)
+	return hvk
+
+
 
 
 def get_lte_taus(N,T,delta_v):

@@ -86,7 +86,7 @@ IMPLICIT NONE
     REAL(dp) :: upperPops(maxline),lowerPops(maxline),wavelength(maxline)
     REAL(dp) :: intensityKkms(maxline),intensityErgs(maxline)
 
-    CHARACTER(6) qnum(maxlev),lowQNum(maxlev),upperQNum(maxlev)
+    CHARACTER(6) :: qnum(maxlev),lowQNum(maxlev),upperQNum(maxlev)
     REAL(dp), PARAMETER :: fk    = hplanck*clight/kboltz
     REAL(dp), PARAMETER :: thc   = 2.d0*hplanck*clight
     REAL(dp), PARAMETER :: fgaus = 1.0645*8.0*pi
