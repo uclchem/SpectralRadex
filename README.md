@@ -1,3 +1,20 @@
+# SpectralRadex
+A python library that serves two purposes:
+
+- Run RADEX directly from python
+- Create model spectra from RADEX outputs
+    
+A number of libraries exist for the first purpose. However, most either launch the RADEX compiled binary as a subprocess or wrap the original code. In the former case, the creating of subprocesses can interfere with many Python multiprocessing methods. In the latter, running multiple models simultanously can be problematic due to the use of F77 common blocks in RADEX.
+
+SpectralRadex uses F2PY to compile a version of RADEX written in modern Fortran, most importantly dropping the use of common blocks. As a result, running a RADEX model creates no subprocesses and can be parallelized.
+
+## Spectral Modelling
+The library also includes functions for producing model spectra from the RADEX results. RADEX provides the optical depth at line centre and the excitation temperature of each molecular transition and these are used to calculate the line profile assuming gaussian line profiles in velocity. This has been benchmarked against CASSIS and provides a useful way to perform this modelling through python.
+
+
+
+## Spectral Modelling Formalism
+
 Radex solves the radiative transfer problem without assuming LTE and then provides various line properties. Two of those properties are key:
     1. The excitation temperature of each line
     2. The optical depth at line centre
@@ -5,15 +22,15 @@ Radex solves the radiative transfer problem without assuming LTE and then provid
 The first is the excitation temperature of an LTE model that would give the same amount of emission. Which means we can use it and the optical depth to get the brightness temperature as a function of velocity.
 
 The brightness temperature is:
-$$T_B = [J_{\nu}(T_{ex})-J_{\nu}(T_{BG})](1-\exp(-\tau_v))$$
+
+<img src="https://render.githubusercontent.com/render/math?math=T_B = [J_{\nu}(T_{ex})-J_{\nu}(T_{BG})](1-\exp(-\tau_v))">
 
 Where $T_{ex}$ is the excitation temperature and $T_{BG}$ is the background temperature, likely 2.73 K. So RADEX provides the value of $T_{ex}$ such that this equation gives the same value as the RADEX model. It also provides us with the optical depth at line centre, $\tau_0$ so we simply need to calculate $tau_v$ assuming a gaussian line profile:
 
-$$\tau_v = \tau_0 e^{\left(-4ln(2)\frac{(v-v_0)^2}{\Delta v^2}\right)}$$
+<img src="https://render.githubusercontent.com/render/math?math=\tau_v = \tau_0 e^{\left(-4ln(2)\frac{(v-v_0)^2}{\Delta v^2}\right)}">
 
-Finally, for CCH in particular, we need to consider what to do with overlapping lines as the hyperfine lines commonly overlap. We follow [Hsieh et al 2015](https://iopscience.iop.org/article/10.1088/0004-637X/802/2/126) and use an opacity weighted radiation temperature:
+Finally, we need to consider what to do with overlapping lines. We follow [Hsieh et al 2015](https://iopscience.iop.org/article/10.1088/0004-637X/802/2/126) and use an opacity weighted radiation temperature:
 
-
-$$T_B = \left(\frac{\Sigma_i J{\nu}(T^i_{ex})\tau^i_v}{\Sigma_i \tau^i_v}-J_{\nu}(T_{BG})\right)(1-\exp(-\tau_v))$$
+<img src="https://render.githubusercontent.com/render/math?math=T_B = \left(\frac{\Sigma_i J{\nu}(T^i_{ex})\tau^i_v}{\Sigma_i \tau^i_v}-J_{\nu}(T_{BG})\right)(1-\exp(-\tau_v))">
 
 We can multiply $T_B$ by the filling factor to get the main beam temperature.
