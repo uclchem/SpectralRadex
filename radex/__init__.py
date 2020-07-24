@@ -2,6 +2,15 @@ from .radexwrap import *
 from pandas import DataFrame
 
 def run(parameters,output_file=None):
+	"""
+	Run a single RADEX model
+
+	Args:
+		parameters: A dictionary containing the RADEX inputs that the user wishes to set,
+		all other parameters will use the default values. See :func:``get_default_parameters`` 
+		for a list of possible parameters.
+		output_file: If not ``None``, the RADEX results are stored to this file in csv format/
+	"""
 	columns=['E_UP (K)','freq','WAVEL (um)','T_ex','tau',
 			'T_R (K)','POP UP','POP LOW', 'FLUX (K*km/s)', 'FLUX (erg/cm2/s)']
 	  
@@ -17,6 +26,10 @@ def run(parameters,output_file=None):
 
 
 def get_default_parameters():
+	"""
+	Get the default RADEX parameters as a dictionary, this largely serves as an example for the
+	input required for :func:`run`.
+	"""
 	parameters={
 		"molfile":"co.dat",
 		"tkin":30.0,

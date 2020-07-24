@@ -1,10 +1,10 @@
-.. SpectralRadex documentation master file, created by
-   sphinx-quickstart on Wed Jul 22 14:43:40 2020.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Welcome to SpectralRadex's documentation!
 =========================================
+.. automodule:: spectralradex
+    :members:
+.. automodule:: spectralradex.radex
+    :members:
+
 
 .. toctree::
    :maxdepth: 2
