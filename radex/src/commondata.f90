@@ -4,7 +4,7 @@ IMPLICIT NONE
 
     !file for input and output
     character(120) :: outfile,molfile,specref
-    character(*), PARAMETER :: radat='/home/jon/Documents/zupcx4/software/Radex/data/'
+    character(*), PARAMETER :: radat='./data/'
     character(*), PARAMETER :: version = '30nov2011'
     character(*), PARAMETER :: logfile = './radex.log'
 
