@@ -1,0 +1,25 @@
+To the best of our knowledge, the original source code of RADEX is provided without a license. We copy the comments from the source code:
+
+	c This file is part of the RADEX software package
+	c to calculate molecular excitation and radiative
+	c transfer in a homogeneous medium.
+	c
+	c Documentation for the program is posted at
+	c https://sron.rug.nl/~vdtak/radex/index.shtml  
+	c
+	c Although this program has been thoroughly tested, the
+	c authors do not claim that it is free of errors and
+	c gives correct results in all situations.
+	c
+	c Publications using this program should make a reference
+	c to our paper: A&A 468, 627 (2007).
+
+This modern Fortran version, packaged with SpectralRadex is covered by the license of that repository (see below).
+
+	Copyright 2020 Jonathan Holdship
+
+	Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
