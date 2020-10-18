@@ -1,7 +1,9 @@
 MODULE Slatec
-  use, intrinsic :: iso_fortran_env, dp=>real64
+  USE types
   IMPLICIT INTEGER (I-N)
   IMPLICIT REAL(dp) (A-H,O-Z)
+  !integer, parameter :: dp2 = selected_real_kind(15,307)
+
 CONTAINS
   !LUDCMP can be skipped entirely in SLATEC (SGEIR does both)
 

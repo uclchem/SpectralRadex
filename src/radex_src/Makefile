@@ -17,7 +17,8 @@ EXT_SUFFIX = $(shell python3-config --extension-suffix)
 #FFLAGS += -Wall -O2
 # there may be other options of course ...
 
-OBJECTS =  slatec.o commondata.o solver.o io.o background.o  main.o 
+OBJECTS = types.o slatec.o commondata.o solver.o io.o background.o  main.o
+SOURCES = types.f90 slatec.f90 commondata.f90 solver.f90 io.f90 background.f90
 EXEC    = radex
 BINDIR  = ../bin/
 
@@ -28,7 +29,7 @@ $(EXEC): $(OBJECTS) solver.o  Makefile main.f90
 	strip $@
 
 python:  $(OBJECTS) solver.o  Makefile wrap.f90
-	python3 -m numpy.f2py -c --fcompiler=${f2pyFC} $(OBJECTS) -m radexwrap wrap.f90
+	python3 -m numpy.f2py -c --f2cmap --fcompiler=${f2pyFC} $(OBJECTS) wrap.f90 -m radexwrap  -h wrap.pyf
 	mv *${EXT_SUFFIX} ../radexwrap.so
 
 %.o: %.f90 Makefile

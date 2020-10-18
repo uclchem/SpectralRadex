@@ -1,4 +1,5 @@
 MODULE Background
+USE types
 USE CommonData
 IMPLICIT NONE
 CONTAINS

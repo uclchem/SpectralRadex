@@ -8,6 +8,18 @@ A number of libraries exist for the first purpose. However, most either launch t
 
 SpectralRadex uses F2PY to compile a version of RADEX written in modern Fortran, most importantly dropping the use of common blocks. As a result, running a RADEX model creates no subprocesses and can be parallelized.
 
+## Installation
+From the main directory run the following
+```
+python3 setup.py build
+python3 setup.py install
+```
+optionally, specify a path for the installation using
+```
+python3 setup.py install --prefix=/path/to/my/install
+```
+making sure that /path/to/my/install is part of your PYTHONPATH environmental variable.
+
 ## Spectral Modelling
 The library also includes functions for producing model spectra from the RADEX results. RADEX provides the optical depth at line centre and the excitation temperature of each molecular transition and these are used to calculate the line profile assuming gaussian line profiles in velocity. This has been benchmarked against CASSIS and provides a useful way to perform this modelling through python.
 

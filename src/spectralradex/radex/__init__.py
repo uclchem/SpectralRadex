@@ -1,5 +1,7 @@
-from .radexwrap import *
+from radexwrap import *
 from pandas import DataFrame
+import os
+_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 def run(parameters,output_file=None):
 	"""
@@ -13,6 +15,9 @@ def run(parameters,output_file=None):
 	"""
 	columns=['E_UP (K)','freq','WAVEL (um)','T_ex','tau',
 			'T_R (K)','POP UP','POP LOW', 'FLUX (K*km/s)', 'FLUX (erg/cm2/s)']
+
+	if parameters["molfile"][0]!="/":
+		parameters["molfile"]=add_data_path(parameters["molfile"])
 	  
 	nlines,qup,qlow,output=radex(parameters)
 	output=DataFrame(columns=columns,data=output[:,:nlines].T)
@@ -46,3 +51,12 @@ def get_default_parameters():
 		"fmax":3.0e7
 	}
 	return parameters
+
+def add_data_path(filename):
+	return os.path.join(_ROOT,"data",filename)
+
+def get_data_files():
+	"""
+	Prints the lambda datafiles packaged with spectralradex
+	"""
+	print(os.listdir(os.path.join(_ROOT,"data")))

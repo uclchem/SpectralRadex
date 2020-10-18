@@ -1,5 +1,5 @@
 MODULE CommonData
-use, intrinsic :: iso_fortran_env, dp=>real64
+USE types
 IMPLICIT NONE
 
     !file for input and output

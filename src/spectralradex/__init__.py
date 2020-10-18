@@ -1,9 +1,6 @@
 from . import radex
 from pandas import DataFrame,read_csv
 import numpy as np
-from scipy.interpolate import interp1d
-from seaborn import lineplot
-from matplotlib.pyplot import subplots
 import os 
 
 package_directory = os.path.dirname(os.path.abspath(__file__))
@@ -132,40 +129,3 @@ def noise_from_spectrum(intensities):
     noise=np.mean((noise-ints)**2.0)
     noise=np.sqrt(noise)
     return noise
-
-##########################################################################
-# CCH
-#
-# The data below is for CCH but would be required for any model
-# We should find a way to generalize it
-##########################################################################
-
-
-# LTE Model
-#line props
-line_df=read_csv(os.path.join(package_directory,"data/cch_line_catalog.csv"))
-line_df["Aij"]=10.0**line_df["Aij"].values
-
-#partition function
-temps=[9.375,18.75,37.5,75.00,150.0,225.0,300.0]
-qs=[19.2835,37.1437,72.9147,144.7150,303.8135,510.5680,766.8920]
-part_func=interp1d(temps,qs,kind='quadratic',bounds_error=False,fill_value="extrapolate")
-
-
-####################################################################################
-
-#plots the four CCH lines in separate plots so we can see all relevant frequencies at once
-#see basically any plot below
-def create_base_plot(spectra_df,v_0):
-    fig,axes=subplots(4,1,figsize=(16,18))
-    axes=axes.flatten()
-    for i,transition in enumerate(line_df.Transition.unique()):
-        spectra_df["Shifted Frequency"]= (1.0+(v_0/2.98e5))*(spectra_df["Frequency"])
-
-        #limit spectrum to a little above and below max and min frequencies of cch lines
-        min_freq=line_df.loc[line_df["Transition"]==transition,"Frequency"].min()
-        max_freq=line_df.loc[line_df["Transition"]==transition,"Frequency"].max()
-        index=(spectra_df["Shifted Frequency"]>min_freq-.15)
-        index=index & (spectra_df["Shifted Frequency"]<max_freq+0.15)
-        lineplot(data=spectra_df[index],x="Frequency",y="Intensity",ax=axes[i],drawstyle="steps-mid")
-    return fig,axes

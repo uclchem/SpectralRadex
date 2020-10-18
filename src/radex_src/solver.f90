@@ -1,8 +1,8 @@
 MODULE Solver
 USE CommonData
 USE Slatec
+USE types
 IMPLICIT NONE
-
 Contains
   SUBROUTINE Matrix(niter,conv)
     !     Set up rate matrix
