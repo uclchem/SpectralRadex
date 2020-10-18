@@ -1,9 +1,11 @@
 import setuptools  # this is the "magic" import
 from numpy.distutils.core import setup, Extension
 from numpy.distutils import exec_command
-
+from glob import glob
 with open("README.md", "r") as fh:
     long_description = fh.read()
+
+DATA_DIR="src/spectralradex/radex/data/"
 
 #exec_command.exec_command( "make python", execute_in='src/radex_src/', use_shell=True)
 
@@ -23,6 +25,7 @@ setup(
     ext_modules = [radexwrap],
     package_dir={'': 'src'},
     packages=setuptools.find_packages(where='src'),
+    data_files=[("spectralradex/radex/data",glob(DATA_DIR))],
     classifiers=[
         'Development Status :: 3 - Alpha',
         "Programming Language :: Python :: 3",

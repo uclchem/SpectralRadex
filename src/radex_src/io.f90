@@ -513,7 +513,7 @@ CONTAINS
     INTEGER :: id           ! ID code of collision partner
     LOGICAL :: unreadParameters
     INTEGER :: posStart,posEnd !variables to help parse dictionary
-    CHARACTER(LEN=100) :: inputParameter, inputValue !temporary storage for inputs
+    CHARACTER(LEN=200) :: inputParameter, inputValue !temporary storage for inputs
     unreadParameters=.True.
     !Set input parameters to default values
     CALL defaults

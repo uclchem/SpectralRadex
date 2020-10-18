@@ -3,7 +3,7 @@ USE types
 IMPLICIT NONE
 
     !file for input and output
-    character(120) :: outfile,molfile,specref
+    character(200) :: outfile,molfile,specref
     character(*), PARAMETER :: radat='./data/'
     character(*), PARAMETER :: version = '30nov2011'
     character(*), PARAMETER :: logfile = './radex.log'

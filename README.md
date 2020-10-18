@@ -11,7 +11,6 @@ SpectralRadex uses F2PY to compile a version of RADEX written in modern Fortran,
 ## Installation
 From the main directory run the following
 ```
-python3 setup.py build
 python3 setup.py install
 ```
 optionally, specify a path for the installation using
