@@ -2,16 +2,17 @@ import setuptools  # this is the "magic" import
 from numpy.distutils.core import setup, Extension
 from numpy.distutils import exec_command
 from glob import glob
+import os
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 DATA_DIR="src/spectralradex/radex/data/"
 
 #exec_command.exec_command( "make python", execute_in='src/radex_src/', use_shell=True)
-
-radexwrap = Extension(name = 'radexwrap',
-                 sources = ['src/radex_src/'+x for x in ['types.f90','commondata.f90','slatec.f90',
-                 'solver.f90','background.f90','io.f90','wrap.f90','radexwrap.pyf']])
+if not os.getenv('READTHEDOCS'):
+    radexwrap = Extension(name = 'radexwrap',
+                     sources = ['src/radex_src/'+x for x in ['types.f90','commondata.f90','slatec.f90',
+                     'solver.f90','background.f90','io.f90','wrap.f90','radexwrap.pyf']])
 
 setup(
     name="spectralradex", # Replace with your own username
