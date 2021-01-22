@@ -29,7 +29,7 @@ jobs:
 
       - name: Build wheels
         env: 
-          CIBW_BEFORE_BUILD="pip install numpy"
+          CIBW_BEFORE_BUILD: "pip install numpy"
         run: |
           python -m cibuildwheel --output-dir wheelhouse
 
