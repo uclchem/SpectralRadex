@@ -22,10 +22,21 @@ jobs:
         run: |
           python -m pip install cibuildwheel==1.7.4
 
-      - name: Install Visual C++ for Python 2.7
-        if: runner.os == 'Windows'
+      # - name: Install Visual C++ for Python 2.7
+      #   if: runner.os == 'Windows'
+      #   run: |
+      #     choco install vcpython27 -f -y
+
+      - name: Install gfortran
+        if: runner.os == "Ubuntu"
         run: |
-          choco install vcpython27 -f -y
+          sudo apt-get install gfortran
+
+
+      - name: Install gfortran mac
+        if: runner.os == "macos"
+        run: |
+          brew install gcc9
 
       - name: Build wheels
         env: 
