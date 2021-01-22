@@ -11,7 +11,7 @@ planck=6.62607e-34
 boltzman=1.38e-23
 
 #c^3/8pi and geometric factor for gaussian integral
-lte_constants=(light_speed*light_speed*light_speed)/(8.515736)#*np.pi) 
+lte_constants=(light_speed*light_speed*light_speed)/(8.515736*np.pi) 
 
 
 #calculate the brightness temperature for each observed frequency for a given set of parameters
