@@ -19,6 +19,7 @@ sys.path.insert(0, os.path.abspath('../src'))
 import mock
  
 MOCK_MODULES = ['numpy', 'scipy', 'pandas', 'radexwrap','seaborn','matplotlib']
+autodoc_mock_imports=['numpy', 'scipy', 'pandas', 'radexwrap','seaborn','matplotlib']
 for mod_name in MOCK_MODULES:
 	sys.modules[mod_name] = mock.Mock()
 	sys.modules["numpy"].pi=3.1
