@@ -25,7 +25,8 @@ Description: # SpectralRadex
         ```
         python3 setup.py install --prefix=/path/to/my/install
         ```
-        making sure that /path/to/my/install is part of your PYTHONPATH environmental variable.
+        making sure that the install path is part of your PYTHONPATH environmental variable. You'll need to add the .egg directory eg. ```path/to/my/install/lib/python3.7/site-packages/spectralradex-0.0.2-py3.7-linux-x86_64.egg```
+        
         
         ## Spectral Modelling
         The library also includes functions for producing model spectra from the RADEX results. RADEX provides the optical depth at line centre and the excitation temperature of each molecular transition and these are used to calculate the line profile assuming gaussian line profiles in velocity. This has been benchmarked against CASSIS and provides a useful way to perform this modelling through python.
