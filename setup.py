@@ -14,8 +14,10 @@ if not os.getenv('READTHEDOCS'):
                      sources = ['src/radex_src/'+x for x in ['types.f90','commondata.f90','slatec.f90',
                      'solver.f90','background.f90','io.f90','wrap.f90','radexwrap.pyf']])
     ext_mods=[radexwrap]
+    data_files=[("spectralradex/radex/data",glob(DATA_DIR))]
 else:
     ext_mods=[]
+    data_files=[]
 
 setup(
     name="spectralradex", # Replace with your own username
@@ -29,7 +31,7 @@ setup(
     ext_modules = ext_mods,
     package_dir={'': 'src'},
     packages=setuptools.find_packages(where='src'),
-    data_files=[("spectralradex/radex/data",glob(DATA_DIR))],
+    data_files=data_files,
     classifiers=[
         'Development Status :: 3 - Alpha',
         "Programming Language :: Python :: 3",
