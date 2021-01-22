@@ -272,6 +272,7 @@ CONTAINS
     RETURN
     !  IF (debug) WRITE(*,*)'ctot=',(ctot(ilev),ilev=1,nlev)
     99 write(*,*) 'error opening data file ',molfile
+    STOP
   END SUBROUTINE ReadData
 
   SUBROUTINE GetInputs

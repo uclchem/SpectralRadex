@@ -29,8 +29,9 @@ def run(parameters, output_file=None):
     output = DataFrame(columns=columns, data=output[:, :nlines].T)
     output["QN Upper"] = qup.reshape(-1, 6).view('S6')[:nlines]
     output["QN Lower"] = qlow.reshape(-1, 6).view('S6')[:nlines]
-    output["QN Upper"] = output["QN Upper"].map(lambda x: str(x, 'utf-8')).str.strip()
-    output["QN Lower"] = output["QN Lower"].map(lambda x: str(x, 'utf-8')).str.strip()
+    output["Qup"] = output["QN Upper"].map(lambda x: x.decode('UTF-8')).str.strip()
+    output["Qlow"] = output["QN Lower"].map(lambda x: x.decode('UTF-8')).str.strip()
+    output=output.drop(["QN Upper","QN Lower"],axis=1)
     if output_file is not None:
         output.to_csv(output_file, index=False)
     return output
@@ -102,8 +103,8 @@ def run_grid(density_values, temperature_values, column_density_values, molfile,
     line_count = np.shape(radex_output)[0]
     transition_value = []
     for line in range(line_count):
-        transition_name = "(" + radex_output.iloc[line]['QN Upper'] + ")-(" + \
-                          radex_output.iloc[line]['QN Lower'] + ")[" + \
+        transition_name = "(" + radex_output.iloc[line]['Qup'] + ")-(" + \
+                          radex_output.iloc[line]['Qlow'] + ")[" + \
                           str(radex_output.iloc[line]['freq']) + " GHz]"
         dataframe_columns += [transition_name]
         transition_value += [radex_output.iloc[line][target_value]]
@@ -111,7 +112,7 @@ def run_grid(density_values, temperature_values, column_density_values, molfile,
                                                          parameters["cdmol"]] + transition_value])
 
     if pool is not None:
-        func = partial(grid_Calc, line_count, parameters, target_value, dataframe_columns)
+        func = partial(format_run_for_grid, line_count, parameters, target_value, dataframe_columns)
         pool_results = pool.map(func, parameter_combinations)
         pool.close()
         pool.join()
@@ -120,7 +121,7 @@ def run_grid(density_values, temperature_values, column_density_values, molfile,
         output = output.append(pool_results_df, ignore_index=True)
     else:
         for grid_point in range(len(parameter_combinations)):
-            output = output.append(grid_Calc(line_count, parameters, target_value, dataframe_columns,
+            output = output.append(format_run_for_grid(line_count, parameters, target_value, dataframe_columns,
                                              parameter_combinations[grid_point]), ignore_index=True)
 
     return output
