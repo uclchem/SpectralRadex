@@ -18,7 +18,6 @@ sys.path.insert(0, os.path.abspath('../src'))
 import mock
  
 MOCK_MODULES = ['numpy', 'scipy', 'pandas', 'radexwrap','seaborn','matplotlib']
-autodoc_mock_imports=['numpy', 'scipy', 'pandas', 'radexwrap','seaborn','matplotlib']
 for mod_name in MOCK_MODULES:
 	sys.modules[mod_name] = mock.Mock()
 	sys.modules["numpy"].pi=3.1
@@ -38,7 +37,9 @@ release = '0.1'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['recommonmark','sphinx.ext.autodoc','sphinx.ext.coverage', 'sphinx.ext.napoleon',"sphinx_rtd_theme"]
+extensions = ['recommonmark','sphinx.ext.autodoc','sphinx.ext.coverage', 'sphinx.ext.napoleon',
+			"sphinx_rtd_theme","sphinx.ext.autodoc"]
+autodoc_mock_imports=['numpy', 'scipy', 'pandas', 'radexwrap','seaborn','matplotlib']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
