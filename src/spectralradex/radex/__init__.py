@@ -2,7 +2,6 @@ from radexwrap import *
 from pandas import DataFrame, concat
 import numpy as np
 from functools import partial
-import multiprocessing as mult
 import os
 
 _ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -12,11 +11,13 @@ def run(parameters, output_file=None):
     """
     Run a single RADEX model
 
-    Args:
-        parameters: A dictionary containing the RADEX inputs that the user wishes to set,
-        all other parameters will use the default values. See :func:``get_default_parameters``
+    :param parameters: A dictionary containing the RADEX inputs that the user wishes to set,
+        all other parameters will use the default values. See :func:`get_default_parameters`
         for a list of possible parameters.
-        output_file: If not ``None``, the RADEX results are stored to this file in csv format/
+    :type parameters: dict
+
+    :param output_file: If not ``None``, the RADEX results are stored to this file in csv format/
+    :type output_file: str
     """
     columns = ['E_UP (K)', 'freq', 'WAVEL (um)', 'T_ex', 'tau',
                'T_R (K)', 'POP UP', 'POP LOW', 'FLUX (K*km/s)', 'FLUX (erg/cm2/s)']
@@ -35,19 +36,47 @@ def run(parameters, output_file=None):
     return output
 
 
-def grid_Calc(line_count, parameters, target_value, columns, grid_parameters):
+def format_run_for_grid(line_count, parameters, target_value, columns, grid_parameters):
+    """
+    Simple function to set up and reformat the output of :func:`run` for :func:`run_grid`
+    """
     parameters["h2"] = grid_parameters[0]
     parameters["tkin"] = grid_parameters[1]
     parameters["cdmol"] = grid_parameters[2]
     radex_output = run(parameters)
-    transition_value = []
-    for line in range(line_count):
-        transition_value += [radex_output.iloc[line][target_value]]
+    transition_value = radex_output.iloc[:line_count][target_value].to_list()
     return DataFrame([[parameters["h2"], parameters["tkin"], parameters["cdmol"]] + transition_value], columns=columns)
 
 
 def run_grid(density_values, temperature_values, column_density_values, molfile,
-             target_value="FLUX (K*km/s)", frange=[0, 3.0e7], pool_size=None):
+             target_value="FLUX (K*km/s)", freq_range=[0, 3.0e7], pool=None):
+    """
+    Runs a grid of RADEX models using all combinations of input lists of H2 density, temperature, and the molecular column 
+    density. Returns a dataframe of results and can be parallelized with the ``pool`` parameter.
+
+    :param density_values: A list of density values for which RADEX models should be run.
+    :type density_values: iterable
+
+    :param temperature_values: A list of temperature values for which RADEX models should be run.
+    :type temperature_values: iterable
+
+    :param column_density_values: A list of column density values for which RADEX models should be run.
+    :type column_density_values: iterable
+
+    :param molfile: Collisional data file for the molecule for which the emission should be calculated.
+    :type molfile: str
+
+    :param target_value: RADEX output column to be returned. Select one of 'T_R (K)', 'FLUX (K*km/s)', 'FLUX (erg/cm2/s)'
+    :type target_value: str,optional
+
+    :param freq_range: Limit output lines to be those with frequencies in the range (fmin,fax).
+    :type freq_range: iterable,float,optional
+
+    :param pool: a Pool object with ``map()``, ``close()`` , and ``join()`` methods such as multiprocessing.Pool or schwimmbad.MPIPool.
+         If supplied, the grid will be calculated in parallel. 
+    :type pool: Pool, optional
+    """
+
     if type(target_value) != str:
         if (target_value != "T_R (K)" or target_value != "FLUX (K*km/s)" or target_value != "FLUX (erg/cm2/s)"):
             print("target_value must be a string and one of the following three options: 'T_R (K)', 'FLUX (K*km/s)', 'FLUX (erg/cm2/s)'")
@@ -56,8 +85,8 @@ def run_grid(density_values, temperature_values, column_density_values, molfile,
         print("molfile must be a string of the moleculer data file to be used.")
         exit()
     parameters = get_default_parameters()
-    parameters["fmin"] = frange[0]
-    parameters["fmax"] = frange[1]
+    parameters["fmin"] = freq_range[0]
+    parameters["fmax"] = freq_range[1]
     parameters["molfile"] = molfile
     parameter_grid = np.array(np.meshgrid(density_values, temperature_values, column_density_values))
     parameter_combinations = parameter_grid.T.reshape(-1, 3)
@@ -81,26 +110,19 @@ def run_grid(density_values, temperature_values, column_density_values, molfile,
     output = DataFrame(columns=dataframe_columns, data=[[parameters["h2"], parameters["tkin"],
                                                          parameters["cdmol"]] + transition_value])
 
-    if isinstance(pool_size, int):
-        if pool_size < mult.cpu_count():
-            with mult.Pool(pool_size) as pool:
-                func = partial(grid_Calc, line_count, parameters, target_value, dataframe_columns)
-                pool_results = pool.map(func, parameter_combinations)
-                pool.close()
-                pool.join()
-                pool_results_df = concat(pool_results, axis=0)
-                print(np.shape(pool_results_df))
-                output = output.append(pool_results_df, ignore_index=True)
-        else:
-            print("pool must be a value less than the number of cores available to the system.")
-            exit()
-    elif pool_size is None:
+    if pool is not None:
+        func = partial(grid_Calc, line_count, parameters, target_value, dataframe_columns)
+        pool_results = pool.map(func, parameter_combinations)
+        pool.close()
+        pool.join()
+        pool_results_df = concat(pool_results, axis=0)
+        print(np.shape(pool_results_df))
+        output = output.append(pool_results_df, ignore_index=True)
+    else:
         for grid_point in range(len(parameter_combinations)):
             output = output.append(grid_Calc(line_count, parameters, target_value, dataframe_columns,
                                              parameter_combinations[grid_point]), ignore_index=True)
-    else:
-        print("pool_size must be an integer value or None.")
-        exit()
+
     return output
 
 
@@ -131,7 +153,7 @@ def add_data_path(filename):
     return os.path.join(_ROOT, "data", filename)
 
 
-def get_data_files():
+def list_data_files():
     """
     Prints the lambda datafiles packaged with spectralradex
     """

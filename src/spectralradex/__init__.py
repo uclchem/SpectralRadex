@@ -11,7 +11,7 @@ planck=6.62607e-34
 boltzman=1.38e-23
 
 #c^3/8pi and geometric factor for gaussian integral
-lte_constants=(light_speed*light_speed*light_speed)/(8.515736*np.pi) 
+lte_constants=(light_speed*light_speed*light_speed)/(8.515736)#*np.pi) 
 
 
 #calculate the brightness temperature for each observed frequency for a given set of parameters
@@ -19,10 +19,14 @@ def calculate_spectrum(obs_freqs,v0,radex_params,radex=True):
 	"""
 	Get the intensity at each frequency provided by the user for a set of physical parameters.
 
-	Args:
-		obs_freqs: An array of the frequencies at which to calculate the intensity.
-		v0: The LSR velocity of the gas
-		radex_params: A dictionary of parameters for the radex model. See :func:`radex.get_default_parameters`
+	:param obs_freqs: An array of the frequencies at which to calculate the intensity.
+	:type obs_freqs: float, iterable
+
+	:param v0: The LSR velocity of the gas
+	:type v0: float
+
+	:param radex_params: A dictionary of parameters for the radex model. See :func:`radex.get_default_parameters`
+	:type radex_params: dict
 	"""
 
 
