@@ -21,7 +21,7 @@ else:
 
 setup(
     name="spectralradex", # Replace with your own username
-    version="0.0.3",
+    version="0.0.4",
     author="Jonathan Holdship",
     author_email="jonholdship@gmail.com",
     description="A package for RADEX and spectral modelling",
@@ -39,5 +39,5 @@ setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
-    install_requires=['numpy','pandas']
+    install_requires=['pandas','numpy']
 )
