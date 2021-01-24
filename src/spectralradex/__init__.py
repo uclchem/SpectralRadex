@@ -17,7 +17,7 @@ lte_constants=(light_speed*light_speed*light_speed)/(8.515736*np.pi)
 #calculate the brightness temperature for each observed frequency for a given set of parameters
 def calculate_spectrum(obs_freqs,v0,radex_params):
 	"""
-	Caculates the brightness temperature as a function of frequency for given input frequencies, :math:`V_{LSR}`
+	Calculates the brightness temperature as a function of frequency for given input frequencies, :math:`V_{LSR}`
 	velocity and RADEX parameters.
 
 	:param obs_freqs: An array of frequency values in GHz at which the brightness temperature should be calculated.
@@ -26,12 +26,10 @@ def calculate_spectrum(obs_freqs,v0,radex_params):
 	:param v0: The :math:`V_{LSR}` velocity of the emitting object to be modelled in km/s
 	:type v0: float
 
-	:param radex_params: dictionary containing the inputs for the RADEX model. See :func:`radex.get_default_parameters`
-	for a list of possible parameters. Note this includes the linewidth in km/s that will be used to set the shape of 
-	the emission lines.
-	:type radex_params:dict
-
+	:param radex_params: dictionary containing the inputs for the RADEX model. See :func:`radex.get_default_parameters` for a list of possible parameters. Note this includes the linewidth in km/s that will be used to set the shape of the emission lines.
+	:type radex_params: dict
 	"""
+
 	#user supplies the observed frequency so doppler shift to emitted
 	#tau dist makes this unnecessary
 	emit_freqs=obs_freqs*(1.0+v0/light_speed)
