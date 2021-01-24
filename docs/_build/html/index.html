@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Welcome to SpectralRadex’s documentation! &mdash; SpectralRadex 0.1 documentation</title>
+  <title>SpectralRadex &mdash; SpectralRadex 0.1 documentation</title>
   
 
   
@@ -29,13 +29,14 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="user/install.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -80,12 +81,23 @@
               
             
             
-              <!-- Local TOC -->
-              <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">Welcome to SpectralRadex’s documentation!</a></li>
-<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+              <p class="caption"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="user/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user/formalism.html">Formalism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user/referencing.html">Referencing</a></li>
 </ul>
-</div>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/spectralradex.html">Spectral Modelling Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/radex.html">Radex Wrapper Functions</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/radex.html">Radex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/spectralmodelling.html">Spectral Modelling</a></li>
+</ul>
+
             
           
         </div>
@@ -130,7 +142,7 @@
     
       <li><a href="#" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Welcome to SpectralRadex’s documentation!</li>
+      <li>SpectralRadex</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -149,80 +161,40 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-spectralradex">
-<span id="welcome-to-spectralradex-s-documentation"></span><h1>Welcome to SpectralRadex’s documentation!<a class="headerlink" href="#module-spectralradex" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="spectralradex.calculate_spectrum">
-<code class="sig-prename descclassname">spectralradex.</code><code class="sig-name descname">calculate_spectrum</code><span class="sig-paren">(</span><em class="sig-param">obs_freqs</em>, <em class="sig-param">v0</em>, <em class="sig-param">radex_params</em>, <em class="sig-param">radex=True</em><span class="sig-paren">)</span><a class="headerlink" href="#spectralradex.calculate_spectrum" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the intensity at each frequency provided by the user for a set of physical parameters.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>obs_freqs</strong> (<em>float</em><em>, </em><em>iterable</em>) – An array of the frequencies at which to calculate the intensity.</p></li>
-<li><p><strong>v0</strong> (<em>float</em>) – The LSR velocity of the gas</p></li>
-<li><p><strong>radex_params</strong> (<em>dict</em>) – A dictionary of parameters for the radex model. See <a class="reference internal" href="#spectralradex.radex.get_default_parameters" title="spectralradex.radex.get_default_parameters"><code class="xref py py-func docutils literal notranslate"><span class="pre">radex.get_default_parameters()</span></code></a></p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<span class="target" id="module-spectralradex.radex"></span><dl class="function">
-<dt id="spectralradex.radex.format_run_for_grid">
-<code class="sig-prename descclassname">spectralradex.radex.</code><code class="sig-name descname">format_run_for_grid</code><span class="sig-paren">(</span><em class="sig-param">line_count</em>, <em class="sig-param">parameters</em>, <em class="sig-param">target_value</em>, <em class="sig-param">columns</em>, <em class="sig-param">grid_parameters</em><span class="sig-paren">)</span><a class="headerlink" href="#spectralradex.radex.format_run_for_grid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Simple function to set up and reformat the output of <a class="reference internal" href="#spectralradex.radex.run" title="spectralradex.radex.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> for <a class="reference internal" href="#spectralradex.radex.run_grid" title="spectralradex.radex.run_grid"><code class="xref py py-func docutils literal notranslate"><span class="pre">run_grid()</span></code></a></p>
-</dd></dl>
-
-<dl class="function">
-<dt id="spectralradex.radex.get_default_parameters">
-<code class="sig-prename descclassname">spectralradex.radex.</code><code class="sig-name descname">get_default_parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spectralradex.radex.get_default_parameters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the default RADEX parameters as a dictionary, this largely serves as an example for the
-input required for <a class="reference internal" href="#spectralradex.radex.run" title="spectralradex.radex.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a>.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="spectralradex.radex.list_data_files">
-<code class="sig-prename descclassname">spectralradex.radex.</code><code class="sig-name descname">list_data_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spectralradex.radex.list_data_files" title="Permalink to this definition">¶</a></dt>
-<dd><p>Prints the lambda datafiles packaged with spectralradex</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="spectralradex.radex.run">
-<code class="sig-prename descclassname">spectralradex.radex.</code><code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">parameters</em>, <em class="sig-param">output_file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#spectralradex.radex.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run a single RADEX model</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>parameters</strong> (<em>dict</em>) – A dictionary containing the RADEX inputs that the user wishes to set,
-all other parameters will use the default values. See <a class="reference internal" href="#spectralradex.radex.get_default_parameters" title="spectralradex.radex.get_default_parameters"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_default_parameters()</span></code></a>
-for a list of possible parameters.</p></li>
-<li><p><strong>output_file</strong> (<em>str</em>) – If not <code class="docutils literal notranslate"><span class="pre">None</span></code>, the RADEX results are stored to this file in csv format/</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="spectralradex.radex.run_grid">
-<code class="sig-prename descclassname">spectralradex.radex.</code><code class="sig-name descname">run_grid</code><span class="sig-paren">(</span><em class="sig-param">density_values, temperature_values, column_density_values, molfile, target_value='FLUX (K*km/s)', freq_range=[0, 30000000.0], pool=None</em><span class="sig-paren">)</span><a class="headerlink" href="#spectralradex.radex.run_grid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Runs a grid of RADEX models using all combinations of input lists of H2 density, temperature, and the molecular column
-density. Returns a dataframe of results and can be parallelized with the <code class="docutils literal notranslate"><span class="pre">pool</span></code> parameter.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>density_values</strong> (<em>iterable</em>) – A list of density values for which RADEX models should be run.</p></li>
-<li><p><strong>temperature_values</strong> (<em>iterable</em>) – A list of temperature values for which RADEX models should be run.</p></li>
-<li><p><strong>column_density_values</strong> (<em>iterable</em>) – A list of column density values for which RADEX models should be run.</p></li>
-<li><p><strong>molfile</strong> (<em>str</em>) – Collisional data file for the molecule for which the emission should be calculated.</p></li>
-<li><p><strong>target_value</strong> (<em>str</em><em>,</em><em>optional</em>) – RADEX output column to be returned. Select one of ‘T_R (K)’, ‘FLUX (K*km/s)’, ‘FLUX (erg/cm2/s)’</p></li>
-<li><p><strong>freq_range</strong> (<em>iterable</em><em>,</em><em>float</em><em>,</em><em>optional</em>) – Limit output lines to be those with frequencies in the range (fmin,fax).</p></li>
-<li><p><strong>pool</strong> (<em>Pool</em><em>, </em><em>optional</em>) – a Pool object with <code class="docutils literal notranslate"><span class="pre">map()</span></code>, <code class="docutils literal notranslate"><span class="pre">close()</span></code> , and <code class="docutils literal notranslate"><span class="pre">join()</span></code> methods such as multiprocessing.Pool or schwimmbad.MPIPool.
-If supplied, the grid will be calculated in parallel.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
+  <div class="section" id="spectralradex">
+<h1>SpectralRadex<a class="headerlink" href="#spectralradex" title="Permalink to this headline">¶</a></h1>
+<p>SpectralRadex is a python module made up of two parts: a RADEX wrapper and a spectral model.</p>
+<p>A number of libraries exist for the first purpose. However, SpectralRadex uses F2PY to compile a version of RADEX written in modern Fortran. As a result, running a RADEX model creates no subprocesses, no text files, and can be easily parallelized. Check our tutorials section for an example of running a grid of RADEX models quickly and entirely within Python.</p>
+<p>For the second purpose, we use the RADEX calculated line opacities and excitation temperatures to calculate the brightness temperature as a function of frequency. This allows observed spectra to be modelled in python in a non-LTE fashion. See our spectral modelling tutorial for more.</p>
 <div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="user/install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user/install.html#pypi">Pypi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user/install.html#manual-install">Manual Install</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user/formalism.html">Formalism</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user/formalism.html#radex">RADEX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user/formalism.html#spectral-modelling">Spectral Modelling</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user/referencing.html">Referencing</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/spectralradex.html">Spectral Modelling Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/radex.html">Radex Wrapper Functions</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/radex.html">Radex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/spectralmodelling.html">Spectral Modelling</a></li>
+</ul>
 </div>
 </div>
 <div class="section" id="indices-and-tables">
@@ -239,6 +211,13 @@ If supplied, the grid will be calculated in parallel.</p></li>
            
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="user/install.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
   
 
   <hr/>

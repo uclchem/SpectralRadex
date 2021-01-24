@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: spectralradex
-Version: 0.0.2
+Version: 0.1.0
 Summary: A package for RADEX and spectral modelling
 Home-page: https://github.com/jonholdship/spectralradex
 Author: Jonathan Holdship
@@ -17,7 +17,11 @@ Description: # SpectralRadex
         SpectralRadex uses F2PY to compile a version of RADEX written in modern Fortran, most importantly dropping the use of common blocks. As a result, running a RADEX model creates no subprocesses and can be parallelized.
         
         ## Installation
-        From the main directory run the following
+        We recommend the simple approach of using pypi:
+        ```
+        pip install spectralradex
+        ```
+        However, if you wish to install manually, clone the repo and from the main directory run the following
         ```
         python3 setup.py install
         ```
@@ -56,7 +60,7 @@ Description: # SpectralRadex
         We can multiply $T_B$ by the filling factor to get the main beam temperature.
         
 Platform: UNKNOWN
-Classifier: Development Status :: 3 - Alpha
+Classifier: Development Status :: 4 - Beta
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent

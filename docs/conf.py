@@ -14,9 +14,8 @@ import os
 import sys
 import sphinx_rtd_theme
 sys.path.insert(0, os.path.abspath('../src'))
-
 import mock
- 
+
 MOCK_MODULES = ['numpy', 'scipy', 'pandas', 'radexwrap','seaborn','matplotlib']
 for mod_name in MOCK_MODULES:
 	sys.modules[mod_name] = mock.Mock()
@@ -34,6 +33,9 @@ release = '0.1'
 
 # -- General configuration ---------------------------------------------------
 
+
+
+    
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.

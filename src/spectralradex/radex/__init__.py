@@ -40,6 +40,7 @@ def run(parameters, output_file=None):
 def format_run_for_grid(line_count, parameters, target_value, columns, grid_parameters):
     """
     Simple function to set up and reformat the output of :func:`run` for :func:`run_grid`
+    :meta private:
     """
     parameters["h2"] = grid_parameters[0]
     parameters["tkin"] = grid_parameters[1]
@@ -151,6 +152,10 @@ def get_default_parameters():
 
 
 def add_data_path(filename):
+    """
+    Adds the path to the packaged datafiles to a filename.
+    :meta private:
+    """
     return os.path.join(_ROOT, "data", filename)
 
 

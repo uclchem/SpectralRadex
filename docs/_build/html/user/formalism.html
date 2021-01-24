@@ -1,0 +1,249 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Formalism &mdash; SpectralRadex 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Referencing" href="referencing.html" />
+    <link rel="prev" title="Installation" href="install.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> SpectralRadex
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Formalism</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#radex">RADEX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#spectral-modelling">Spectral Modelling</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="referencing.html">Referencing</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/spectralradex.html">Spectral Modelling Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/radex.html">Radex Wrapper Functions</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/radex.html">Radex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/spectralmodelling.html">Spectral Modelling</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SpectralRadex</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Formalism</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/user/formalism.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="formalism">
+<span id="id1"></span><h1>Formalism<a class="headerlink" href="#formalism" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="radex">
+<h2>RADEX<a class="headerlink" href="#radex" title="Permalink to this headline">¶</a></h2>
+<p>RADEX is a non-LTE radiative transfer solver that calculates the intensities of molecular lines assuming an homogeneous medium with a simple geometry. For a full description of the code, please see  <a class="reference external" href="http://dx.doi.org/10.1051/0004-6361:20066820">their release paper</a>. The RADEX code has been modified to meet modern Fortran specifications but is otherwise unchanged in SpectralRadex.</p>
+</div>
+<div class="section" id="spectral-modelling">
+<h2>Spectral Modelling<a class="headerlink" href="#spectral-modelling" title="Permalink to this headline">¶</a></h2>
+<p>In order to calculate the emission from a molecular transition as a function of frequency, we need the excitation temperature and the optical depth as a function of velocity. This allows us to calculate the brightness temperature as a function of velocity:</p>
+<div class="math notranslate nohighlight">
+\[T_B = [J_{\nu}(T_{ex})-J_{\nu}(T_{BG})](1-\exp(-\tau_v))\]</div>
+<p>Where  <span class="math notranslate nohighlight">\(T_{ex}\)</span> is the excitation temperature and  <span class="math notranslate nohighlight">\(T_{BG}\)</span> is the background temperature, likely 2.73 K. In LTE, the optical depth at line centre can be calculated from the column density and Boltzmann distribution whilst the excitation temperature is assumed to be the LTE temperature. We can then calculate  <span class="math notranslate nohighlight">\(\tau_v\)</span> assuming a gaussian line profile:</p>
+<div class="math notranslate nohighlight">
+\[\tau_v = \tau_0 e^{\left(-4ln(2)\frac{(v-v_0)^2}{\Delta v^2}\right)}\]</div>
+<p>However, using RADEX, we can do better than to assume LTE. For a given set of physical parameters RADEX will provide the optical depth at line centre for every transition and the excitation temperature that gives the correct brightness temperature at line centre.</p>
+<p>Thus, rather than using our gas kinetic temperature and an LTE derived <span class="math notranslate nohighlight">\(\tau_0\)</span>, we can take the values for each line from an appropriate RADEX output. In the high density limit, this tends to the LTE solution but at lower densities it can deviate significantly.</p>
+<p>In SpectralRadex, we do this for each transition in a collisional datafile between a minimum and maximum frequency set by the user. <span class="math notranslate nohighlight">\(T_B\)</span> is calculated as a function of frequency for each line and then combined to give the overall spectrum of the molecule.</p>
+<p>Finally, we need to consider what to do with overlapping lines. We follow <a class="reference external" href="https://iopscience.iop.org/article/10.1088/0004-637X/802/2/126">Hsieh et al 2015</a> and use an opacity weighted radiation temperature:</p>
+<div class="math notranslate nohighlight">
+\[T_B = \left(\frac{\Sigma_i J{\nu}(T^i_{ex})\tau^i_v}{\Sigma_i \tau^i_v}-J_{\nu}(T_{BG})\right)(1-\exp(-\tau_v))\]</div>
+<p>We can multiply <span class="math notranslate nohighlight">\(T_B\)</span> by the filling factor to get the main beam temperature.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="referencing.html" class="btn btn-neutral float-right" title="Referencing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="install.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Jonathan Holdship
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

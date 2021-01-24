@@ -7,13 +7,6 @@ src/radex_src/slatec.f90
 src/radex_src/solver.f90
 src/radex_src/types.f90
 src/radex_src/wrap.f90
-src/radex_src/background.f90
-src/radex_src/commondata.f90
-src/radex_src/io.f90
-src/radex_src/slatec.f90
-src/radex_src/solver.f90
-src/radex_src/types.f90
-src/radex_src/wrap.f90
 src/spectralradex/__init__.py
 src/spectralradex.egg-info/PKG-INFO
 src/spectralradex.egg-info/SOURCES.txt
