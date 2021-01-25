@@ -8,7 +8,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-18.04, windows-latest]
+        os: [macos-latest]
+        #ubuntu-18.04, windows-latest]
         #, macos-latest]
 
     steps:
@@ -27,7 +28,7 @@ jobs:
         env: 
           CIBW_BUILD: cp36-* cp37-* cp38-*
           CI_BEFORE_ALL_LINUX: sudo apt-get install gfortran
-          CIBW_BEFORE_ALL_MACOS: brew install gcc && brew link gcc
+          CIBW_BEFORE_ALL_MACOS: brew install gcc && brew install gfortran
           CIBW_BEFORE_BUILD: "pip install numpy"
         run: |
           python -m cibuildwheel --output-dir wheelhouse
