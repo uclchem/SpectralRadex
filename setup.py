@@ -27,7 +27,7 @@ setup(
     description="A package for RADEX and spectral modelling",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/jonholdship/spectralradex",
+    url="https://spectralradex.readthedocs.io",
     ext_modules = ext_mods,
     package_dir={'': 'src'},
     packages=setuptools.find_packages(where='src'),
