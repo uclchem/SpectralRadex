@@ -580,6 +580,8 @@ CONTAINS
           READ(inputValue,*) density(6)
         CASE('h+')
           READ(inputValue,*) density(7)
+        CASE('geometry')
+          READ(inputValue,*) method
         CASE DEFAULT
           write(*,*) "Unknown parameter in input dictionary, acceptable parameters are:"
           write(*,*) "molfile, tkin, tbg, cdmol, linewidth, h2, h, e-, p-h2, o-h2, h+"

@@ -132,6 +132,11 @@ def get_default_parameters():
     """
     Get the default RADEX parameters as a dictionary, this largely serves as an example for the
     input required for :func:`run`.
+
+    molfile can be a complete path to a collisional datafile in the LAMDA database format or one of the files
+    listed by :func:`list_data_files`.
+
+    method is 1 (uniform sphere), 2 (LVG), or 3 (slab)
     """
     parameters = {
         "molfile": "co.dat",
@@ -146,7 +151,8 @@ def get_default_parameters():
         "h+": 0.0,
         "linewidth": 1.0,
         "fmin": 0.0,
-        "fmax": 3.0e7
+        "fmax": 3.0e7,
+        "geometry":1
     }
     return parameters
 
@@ -161,6 +167,8 @@ def add_data_path(filename):
 
 def list_data_files():
     """
-    Prints the lambda datafiles packaged with spectralradex
+    SpectralRadex is packaged with a selection of LAMDA collisional datafiles. 
+    This function prints the list of available files. You can provide the full path to another
+    file in the parameter dictionary to use one not packaged with SpectralRadex.
     """
     print(os.listdir(os.path.join(_ROOT, "data")))

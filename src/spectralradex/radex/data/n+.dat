@@ -1,0 +1,29 @@
+!ATOM
+N+ ground-state (^3P) fine structure line spectrum from NIST
+!ATOMIC WEIGHT
+14.0
+!NUMBER OF ENERGY LEVELS
+3
+!LEVEL + ENERGIES(cm^-1) + WEIGHT + J 
+    1     0.0000        1.0     0
+    2     48.7382       3.0     1
+    3     130.8000      5.0     2 
+!NUMBER OF RADIATIVE TRANSITIONS
+2
+!TRANS + UP + LOW + EINSTEINA(s^-1) + FREQ(GHz) + E_u(K)
+    1     2     1  2.08e-6          1461.1338000     70.10
+    2     3     2  7.46e-6          2459.3740000    188.10
+!NUMBER OF COLL PARTNERS
+1
+!COLLISIONS BETWEEN
+4 e-N+ collisions from Tayal (2011)
+!NUMBER OF COLL TRANS
+3
+!NUMBER OF COLL TEMPS
+11
+!COLL TEMPS
+   0.5e3  1.0e3  2.0e3  4.0e3  6.0e3  8.0e3  1.0e4  2.0e4  4.0e4  6.0e4  1.0e5
+!TRANS + UP + LOW + COLLRATES(cm^-3 s^-1)
+    1     2     1  5.093e-08  3.429e-08  2.289e-08  1.605e-08  1.351e-08  1.202e-08  1.093e-08  8.033e-09  6.025e-09  5.131e-09  4.120e-09
+    2     3     2  9.415e-08  6.658e-08  4.823e-08  3.656e-08  3.119e-08  2.759e-08  2.502e-08  1.818e-08  1.294e-08  1.042e-08  7.858e-09
+    3     3     1  8.412e-09  6.003e-09  4.437e-09  3.629e-09  3.386e-09  3.299e-09  3.244e-09  3.001e-09  2.588e-09  2.240e-09  1.773e-09
