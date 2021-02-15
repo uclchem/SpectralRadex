@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Radex Wrapper Functions &mdash; SpectralRadex 0.1 documentation</title>
+  <title>Radex Wrapper Functions &mdash; SpectralRadex 0.1.1 documentation</title>
   
 
   
@@ -183,12 +183,17 @@
 <code class="sig-prename descclassname">spectralradex.radex.</code><code class="sig-name descname">get_default_parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spectralradex.radex.get_default_parameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the default RADEX parameters as a dictionary, this largely serves as an example for the
 input required for <a class="reference internal" href="#spectralradex.radex.run" title="spectralradex.radex.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a>.</p>
+<p>molfile can be a complete path to a collisional datafile in the LAMDA database format or one of the files
+listed by <a class="reference internal" href="#spectralradex.radex.list_data_files" title="spectralradex.radex.list_data_files"><code class="xref py py-func docutils literal notranslate"><span class="pre">list_data_files()</span></code></a>.</p>
+<p>method is 1 (uniform sphere), 2 (LVG), or 3 (slab)</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="spectralradex.radex.list_data_files">
 <code class="sig-prename descclassname">spectralradex.radex.</code><code class="sig-name descname">list_data_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spectralradex.radex.list_data_files" title="Permalink to this definition">¶</a></dt>
-<dd><p>Prints the lambda datafiles packaged with spectralradex</p>
+<dd><p>SpectralRadex is packaged with a selection of LAMDA collisional datafiles.
+This function prints the list of available files. You can provide the full path to another
+file in the parameter dictionary to use one not packaged with SpectralRadex.</p>
 </dd></dl>
 
 <dl class="py function">
