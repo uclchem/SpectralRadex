@@ -21,7 +21,7 @@ else:
 
 setup(
     name="spectralradex", # Replace with your own username
-    version="0.2",
+    version="0.2.1",
     author="Jonathan Holdship",
     author_email="jonholdship@gmail.com",
     description="A package for RADEX and spectral modelling",
