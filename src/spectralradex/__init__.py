@@ -61,7 +61,7 @@ def model_spectrum(obs_freqs,v0,radex_params,tau_profile=maxwellian_distribution
     :type tau_profile: function, optional
     """
 
-    #make sure input frquencies are sorted array
+    #make sure input frquencies are a sorted array
     obs_freqs=np.asarray(obs_freqs)
     obs_freqs.sort()
     
@@ -71,7 +71,8 @@ def model_spectrum(obs_freqs,v0,radex_params,tau_profile=maxwellian_distribution
     delta_v=radex_params["linewidth"]
 
     #obtain tau as a function of frequency and tau*radiation temperature for each line
-    solve=tau_0_df.apply(get_tau_distribution,axis=1,args=(v0,delta_v,obs_freqs,tau_profile),raw=True)
+    vfunc=lambda x: get_tau_distribution(x,v0,delta_v,obs_freqs,tau_profile)
+    solve=np.apply_along_axis(vfunc,axis=1,arr=tau_0_df.values)
 
     #sum to get total optical depth
     taus=[x[0] for x in solve]
@@ -96,7 +97,7 @@ def get_tau_distribution(x,v0,delta_v,frequencies,tau_profile):
     """
     #unpack tau_df row
     line_freq,tau_0,t_ex=x
-    
+
     #get the relative velocity of all the emitting frequencies
     velocities=((line_freq/frequencies)-1.0)*light_speed
     
