@@ -8,6 +8,9 @@ A number of libraries exist for the first purpose. However, most either launch t
 
 SpectralRadex uses F2PY to compile a version of RADEX written in modern Fortran, most importantly dropping the use of common blocks. As a result, running a RADEX model creates no subprocesses and can be parallelized.
 
+## Documentation
+Please check the documentation on [our readthedocs](https://spectralradex.readthedocs.io) page for installation instructions, detailed documentation of the library and usage examples. 
+
 ## Installation
 We recommend the simple approach of using pypi:
 ```
