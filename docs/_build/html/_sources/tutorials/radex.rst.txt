@@ -47,6 +47,7 @@ parameters RADEX expects. An example can be obtained using the
     	linewidth : 1.0
     	fmin : 0.0
     	fmax : 30000000.0
+    	geometry : 1
     }
 
 
@@ -181,25 +182,58 @@ Parameter Grids
 
 It is more likely that one will want to run the code over many
 combinations of input parameters. This can be achieved via the
-``run_grid()`` function. This function takes iterables for the three
-variables (density, temperature and column density) as well as fixed
-values for the other RADEX parameters. It then produces the RADEX output
-for all combinations of the three iterables.
+``run_grid()`` function. This function also takes a parameter dictionary
+of the same format as ``run()``. However, variables which are too be
+varied over the grid should be supplied as iterables.
+
+Furthermore, to keep things simple, the desired RADEXtakes iterables for
+the three variables (density, temperature and column density) as well as
+fixed values for the other RADEX parameters. It then produces the RADEX
+output for all combinations of the three iterables.
+
+We’ll use an example grid which can be acquired using the
+``get_example_grid_parameters()`` function.
+
+.. code:: python
+
+    parameters=radex.get_example_grid_parameters()
+    parameters
+
+
+
+
+.. parsed-literal::
+
+    {'molfile': 'co.dat',
+     'tkin': array([ 10. ,  82.5, 155. , 227.5, 300. ]),
+     'tbg': 2.73,
+     'cdmol': array([1.e+14, 1.e+15, 1.e+16, 1.e+17, 1.e+18]),
+     'h2': array([   10000.        ,    56234.13251903,   316227.76601684,
+             1778279.41003892, 10000000.        ]),
+     'h': 0.0,
+     'e-': 0.0,
+     'p-h2': 0.0,
+     'o-h2': 0.0,
+     'h+': 0.0,
+     'linewidth': 1.0,
+     'fmin': 0.0,
+     'fmax': 30000000.0,
+     'geometry': 1}
+
+
 
 .. code:: python
 
     tic = time.perf_counter()
     
-    grid_df = radex.run_grid(density_values=np.arange(1.0e5, 1.0e6, 1.0e5), temperature_values=np.arange(10, 100, 10),
-                       column_density_values=np.arange(1.0e14, 1.0e15, 1.0e14), molfile='co.dat',
-                       target_value="T_R (K)")
+    grid_df = radex.run_grid(parameters,target_value="T_R (K)")
     toc = time.perf_counter()
     print(f"run_grid took {toc-tic:0.4f} seconds without a pool")
 
 
 .. parsed-literal::
 
-    run_grid took 12.6135 seconds without a pool
+    run_grid took 3.0571 seconds without a pool
 
 
 .. code:: python
@@ -229,9 +263,9 @@ for all combinations of the three iterables.
       <thead>
         <tr style="text-align: right;">
           <th></th>
-          <th>Density</th>
-          <th>Temperature</th>
-          <th>Column Density</th>
+          <th>tkin</th>
+          <th>cdmol</th>
+          <th>h2</th>
           <th>(1)-(0)[115.2712018 GHz]</th>
           <th>(2)-(1)[230.538 GHz]</th>
           <th>(3)-(2)[345.7959899 GHz]</th>
@@ -240,48 +274,48 @@ for all combinations of the three iterables.
       <tbody>
         <tr>
           <th>0</th>
-          <td>100000.0</td>
           <td>10.0</td>
           <td>1.000000e+14</td>
-          <td>0.102858</td>
-          <td>0.140506</td>
-          <td>0.054774</td>
+          <td>10000.0</td>
+          <td>0.114622</td>
+          <td>0.108152</td>
+          <td>0.022018</td>
         </tr>
         <tr>
           <th>1</th>
-          <td>100000.0</td>
-          <td>20.0</td>
-          <td>1.000000e+14</td>
-          <td>0.079719</td>
-          <td>0.185064</td>
-          <td>0.166824</td>
+          <td>10.0</td>
+          <td>1.000000e+15</td>
+          <td>10000.0</td>
+          <td>1.048925</td>
+          <td>0.958338</td>
+          <td>0.215099</td>
         </tr>
         <tr>
           <th>2</th>
-          <td>100000.0</td>
-          <td>30.0</td>
-          <td>1.000000e+14</td>
-          <td>0.062672</td>
-          <td>0.174883</td>
-          <td>0.211890</td>
+          <td>10.0</td>
+          <td>1.000000e+16</td>
+          <td>10000.0</td>
+          <td>5.189712</td>
+          <td>4.045272</td>
+          <td>1.567682</td>
         </tr>
         <tr>
           <th>3</th>
-          <td>100000.0</td>
-          <td>40.0</td>
-          <td>1.000000e+14</td>
-          <td>0.051761</td>
-          <td>0.158660</td>
-          <td>0.224313</td>
+          <td>10.0</td>
+          <td>1.000000e+17</td>
+          <td>10000.0</td>
+          <td>6.561081</td>
+          <td>5.156221</td>
+          <td>3.411413</td>
         </tr>
         <tr>
           <th>4</th>
-          <td>100000.0</td>
-          <td>50.0</td>
-          <td>1.000000e+14</td>
-          <td>0.044285</td>
-          <td>0.143712</td>
-          <td>0.223537</td>
+          <td>10.0</td>
+          <td>1.000000e+18</td>
+          <td>10000.0</td>
+          <td>6.639451</td>
+          <td>5.259944</td>
+          <td>3.822848</td>
         </tr>
       </tbody>
     </table>
@@ -308,15 +342,95 @@ Note the time in the example below compared to the grid above.
 
     tic = time.perf_counter()
     pool=Pool(8)
-    grid_df = radex.run_grid(density_values=np.arange(1.0e5, 1.0e6, 1.0e5), temperature_values=np.arange(10, 100, 10),
-                       column_density_values=np.arange(1.0e14, 1.0e15, 1.0e14), molfile='co.dat',
-                       target_value="T_R (K)",pool=pool)
+    grid_df = radex.run_grid(parameters,target_value="T_R (K)",pool=pool)
     toc = time.perf_counter()
     print(f"run_grid took {toc-tic:0.4f} seconds with a pool of 8 workers")
+    grid_df.iloc[:,0:6].head()
 
 
 .. parsed-literal::
 
-    (728, 43)
-    run_grid took 2.2611 seconds with a pool of 8 workers
+    run_grid took 0.7459 seconds with a pool of 8 workers
+
+
+
+
+.. raw:: html
+
+    <div>
+    <style scoped>
+        .dataframe tbody tr th:only-of-type {
+            vertical-align: middle;
+        }
+    
+        .dataframe tbody tr th {
+            vertical-align: top;
+        }
+    
+        .dataframe thead th {
+            text-align: right;
+        }
+    </style>
+    <table border="1" class="dataframe">
+      <thead>
+        <tr style="text-align: right;">
+          <th></th>
+          <th>tkin</th>
+          <th>cdmol</th>
+          <th>h2</th>
+          <th>(1)-(0)[115.2712018 GHz]</th>
+          <th>(2)-(1)[230.538 GHz]</th>
+          <th>(3)-(2)[345.7959899 GHz]</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>0</th>
+          <td>10.0</td>
+          <td>1.000000e+14</td>
+          <td>10000.0</td>
+          <td>0.114622</td>
+          <td>0.108152</td>
+          <td>0.022018</td>
+        </tr>
+        <tr>
+          <th>1</th>
+          <td>10.0</td>
+          <td>1.000000e+15</td>
+          <td>10000.0</td>
+          <td>1.048925</td>
+          <td>0.958338</td>
+          <td>0.215099</td>
+        </tr>
+        <tr>
+          <th>2</th>
+          <td>10.0</td>
+          <td>1.000000e+16</td>
+          <td>10000.0</td>
+          <td>5.189712</td>
+          <td>4.045272</td>
+          <td>1.567682</td>
+        </tr>
+        <tr>
+          <th>3</th>
+          <td>10.0</td>
+          <td>1.000000e+17</td>
+          <td>10000.0</td>
+          <td>6.561081</td>
+          <td>5.156221</td>
+          <td>3.411413</td>
+        </tr>
+        <tr>
+          <th>4</th>
+          <td>10.0</td>
+          <td>1.000000e+18</td>
+          <td>10000.0</td>
+          <td>6.639451</td>
+          <td>5.259944</td>
+          <td>3.822848</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
 

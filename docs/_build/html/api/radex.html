@@ -173,7 +173,7 @@
 
 <dl class="py function">
 <dt id="spectralradex.radex.format_run_for_grid">
-<code class="sig-prename descclassname">spectralradex.radex.</code><code class="sig-name descname">format_run_for_grid</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">line_count</span></em>, <em class="sig-param"><span class="n">parameters</span></em>, <em class="sig-param"><span class="n">target_value</span></em>, <em class="sig-param"><span class="n">columns</span></em>, <em class="sig-param"><span class="n">grid_parameters</span></em><span class="sig-paren">)</span><a class="headerlink" href="#spectralradex.radex.format_run_for_grid" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">spectralradex.radex.</code><code class="sig-name descname">format_run_for_grid</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">line_count</span></em>, <em class="sig-param"><span class="n">parameters</span></em>, <em class="sig-param"><span class="n">target_value</span></em>, <em class="sig-param"><span class="n">columns</span></em>, <em class="sig-param"><span class="n">grid_variables</span></em>, <em class="sig-param"><span class="n">grid_parameters</span></em><span class="sig-paren">)</span><a class="headerlink" href="#spectralradex.radex.format_run_for_grid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simple function to set up and reformat the output of <a class="reference internal" href="#spectralradex.radex.run" title="spectralradex.radex.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> for <a class="reference internal" href="#spectralradex.radex.run_grid" title="spectralradex.radex.run_grid"><code class="xref py py-func docutils literal notranslate"><span class="pre">run_grid()</span></code></a>
 :meta private:</p>
 </dd></dl>
@@ -186,6 +186,12 @@ input required for <a class="reference internal" href="#spectralradex.radex.run"
 <p>molfile can be a complete path to a collisional datafile in the LAMDA database format or one of the files
 listed by <a class="reference internal" href="#spectralradex.radex.list_data_files" title="spectralradex.radex.list_data_files"><code class="xref py py-func docutils literal notranslate"><span class="pre">list_data_files()</span></code></a>.</p>
 <p>method is 1 (uniform sphere), 2 (LVG), or 3 (slab)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="spectralradex.radex.get_example_grid_parameters">
+<code class="sig-prename descclassname">spectralradex.radex.</code><code class="sig-name descname">get_example_grid_parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spectralradex.radex.get_example_grid_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary of parameters for RADEX with iterables which can be used with <a class="reference internal" href="#spectralradex.radex.run_grid" title="spectralradex.radex.run_grid"><code class="xref py py-func docutils literal notranslate"><span class="pre">run_grid()</span></code></a>.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -214,15 +220,13 @@ for a list of possible parameters.</p></li>
 
 <dl class="py function">
 <dt id="spectralradex.radex.run_grid">
-<code class="sig-prename descclassname">spectralradex.radex.</code><code class="sig-name descname">run_grid</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">density_values</span></em>, <em class="sig-param"><span class="n">temperature_values</span></em>, <em class="sig-param"><span class="n">column_density_values</span></em>, <em class="sig-param"><span class="n">molfile</span></em>, <em class="sig-param"><span class="n">target_value</span><span class="o">=</span><span class="default_value">'FLUX (K*km/s)'</span></em>, <em class="sig-param"><span class="n">freq_range</span><span class="o">=</span><span class="default_value">[0, 30000000.0]</span></em>, <em class="sig-param"><span class="n">pool</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#spectralradex.radex.run_grid" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">spectralradex.radex.</code><code class="sig-name descname">run_grid</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parameters</span></em>, <em class="sig-param"><span class="n">target_value</span><span class="o">=</span><span class="default_value">'FLUX (K*km/s)'</span></em>, <em class="sig-param"><span class="n">freq_range</span><span class="o">=</span><span class="default_value">[0, 30000000.0]</span></em>, <em class="sig-param"><span class="n">pool</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#spectralradex.radex.run_grid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs a grid of RADEX models using all combinations of input lists of H2 density, temperature, and the molecular column
 density. Returns a dataframe of results and can be parallelized with the <code class="docutils literal notranslate"><span class="pre">pool</span></code> parameter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>density_values</strong> (<em>iterable</em>) – A list of density values for which RADEX models should be run.</p></li>
-<li><p><strong>temperature_values</strong> (<em>iterable</em>) – A list of temperature values for which RADEX models should be run.</p></li>
-<li><p><strong>column_density_values</strong> (<em>iterable</em>) – A list of column density values for which RADEX models should be run.</p></li>
+<li><p><strong>parameters</strong> – A dictionary of parameters as provided by <a class="reference internal" href="#spectralradex.radex.get_default_parameters" title="spectralradex.radex.get_default_parameters"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_default_parameters()</span></code></a> or <a class="reference internal" href="#spectralradex.radex.get_example_grid_parameters" title="spectralradex.radex.get_example_grid_parameters"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_example_grid_parameters()</span></code></a>. Parameters should take a single value when they are constant over the grid and contain and interable if they are to be varied.</p></li>
 <li><p><strong>molfile</strong> (<em>str</em>) – Collisional data file for the molecule for which the emission should be calculated.</p></li>
 <li><p><strong>target_value</strong> (<em>str</em><em>,</em><em>optional</em>) – RADEX output column to be returned. Select one of ‘T_R (K)’, ‘FLUX (K*km/s)’, ‘FLUX (erg/cm2/s)’</p></li>
 <li><p><strong>freq_range</strong> (<em>iterable</em><em>,</em><em>float</em><em>,</em><em>optional</em>) – Limit output lines to be those with frequencies in the range (fmin,fax).</p></li>

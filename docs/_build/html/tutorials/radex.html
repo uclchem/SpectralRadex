@@ -205,6 +205,7 @@ parameters RADEX expects. An example can be obtained using the
     <span class="n">linewidth</span> <span class="p">:</span> <span class="mf">1.0</span>
     <span class="n">fmin</span> <span class="p">:</span> <span class="mf">0.0</span>
     <span class="n">fmax</span> <span class="p">:</span> <span class="mf">30000000.0</span>
+    <span class="n">geometry</span> <span class="p">:</span> <span class="mi">1</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -327,20 +328,44 @@ parameters RADEX expects. An example can be obtained using the
 <h2>Parameter Grids<a class="headerlink" href="#parameter-grids" title="Permalink to this headline">¶</a></h2>
 <p>It is more likely that one will want to run the code over many
 combinations of input parameters. This can be achieved via the
-<code class="docutils literal notranslate"><span class="pre">run_grid()</span></code> function. This function takes iterables for the three
-variables (density, temperature and column density) as well as fixed
-values for the other RADEX parameters. It then produces the RADEX output
-for all combinations of the three iterables.</p>
+<code class="docutils literal notranslate"><span class="pre">run_grid()</span></code> function. This function also takes a parameter dictionary
+of the same format as <code class="docutils literal notranslate"><span class="pre">run()</span></code>. However, variables which are too be
+varied over the grid should be supplied as iterables.</p>
+<p>Furthermore, to keep things simple, the desired RADEXtakes iterables for
+the three variables (density, temperature and column density) as well as
+fixed values for the other RADEX parameters. It then produces the RADEX
+output for all combinations of the three iterables.</p>
+<p>We’ll use an example grid which can be acquired using the
+<code class="docutils literal notranslate"><span class="pre">get_example_grid_parameters()</span></code> function.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span><span class="o">=</span><span class="n">radex</span><span class="o">.</span><span class="n">get_example_grid_parameters</span><span class="p">()</span>
+<span class="n">parameters</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;molfile&#39;</span><span class="p">:</span> <span class="s1">&#39;co.dat&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;tkin&#39;</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span> <span class="mf">10.</span> <span class="p">,</span>  <span class="mf">82.5</span><span class="p">,</span> <span class="mf">155.</span> <span class="p">,</span> <span class="mf">227.5</span><span class="p">,</span> <span class="mf">300.</span> <span class="p">]),</span>
+ <span class="s1">&#39;tbg&#39;</span><span class="p">:</span> <span class="mf">2.73</span><span class="p">,</span>
+ <span class="s1">&#39;cdmol&#39;</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span><span class="mf">1.e+14</span><span class="p">,</span> <span class="mf">1.e+15</span><span class="p">,</span> <span class="mf">1.e+16</span><span class="p">,</span> <span class="mf">1.e+17</span><span class="p">,</span> <span class="mf">1.e+18</span><span class="p">]),</span>
+ <span class="s1">&#39;h2&#39;</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span>   <span class="mf">10000.</span>        <span class="p">,</span>    <span class="mf">56234.13251903</span><span class="p">,</span>   <span class="mf">316227.76601684</span><span class="p">,</span>
+         <span class="mf">1778279.41003892</span><span class="p">,</span> <span class="mf">10000000.</span>        <span class="p">]),</span>
+ <span class="s1">&#39;h&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+ <span class="s1">&#39;e-&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+ <span class="s1">&#39;p-h2&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+ <span class="s1">&#39;o-h2&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+ <span class="s1">&#39;h+&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+ <span class="s1">&#39;linewidth&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+ <span class="s1">&#39;fmin&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+ <span class="s1">&#39;fmax&#39;</span><span class="p">:</span> <span class="mf">30000000.0</span><span class="p">,</span>
+ <span class="s1">&#39;geometry&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+</pre></div>
+</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tic</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
 
-<span class="n">grid_df</span> <span class="o">=</span> <span class="n">radex</span><span class="o">.</span><span class="n">run_grid</span><span class="p">(</span><span class="n">density_values</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">1.0e5</span><span class="p">,</span> <span class="mf">1.0e6</span><span class="p">,</span> <span class="mf">1.0e5</span><span class="p">),</span> <span class="n">temperature_values</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-                   <span class="n">column_density_values</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">1.0e14</span><span class="p">,</span> <span class="mf">1.0e15</span><span class="p">,</span> <span class="mf">1.0e14</span><span class="p">),</span> <span class="n">molfile</span><span class="o">=</span><span class="s1">&#39;co.dat&#39;</span><span class="p">,</span>
-                   <span class="n">target_value</span><span class="o">=</span><span class="s2">&quot;T_R (K)&quot;</span><span class="p">)</span>
+<span class="n">grid_df</span> <span class="o">=</span> <span class="n">radex</span><span class="o">.</span><span class="n">run_grid</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span><span class="n">target_value</span><span class="o">=</span><span class="s2">&quot;T_R (K)&quot;</span><span class="p">)</span>
 <span class="n">toc</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;run_grid took {toc-tic:0.4f} seconds without a pool&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">run_grid</span> <span class="n">took</span> <span class="mf">12.6135</span> <span class="n">seconds</span> <span class="n">without</span> <span class="n">a</span> <span class="n">pool</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">run_grid</span> <span class="n">took</span> <span class="mf">3.0571</span> <span class="n">seconds</span> <span class="n">without</span> <span class="n">a</span> <span class="n">pool</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">grid_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
@@ -364,9 +389,9 @@ for all combinations of the three iterables.</p>
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Density</th>
-      <th>Temperature</th>
-      <th>Column Density</th>
+      <th>tkin</th>
+      <th>cdmol</th>
+      <th>h2</th>
       <th>(1)-(0)[115.2712018 GHz]</th>
       <th>(2)-(1)[230.538 GHz]</th>
       <th>(3)-(2)[345.7959899 GHz]</th>
@@ -375,48 +400,48 @@ for all combinations of the three iterables.</p>
   <tbody>
     <tr>
       <th>0</th>
-      <td>100000.0</td>
       <td>10.0</td>
       <td>1.000000e+14</td>
-      <td>0.102858</td>
-      <td>0.140506</td>
-      <td>0.054774</td>
+      <td>10000.0</td>
+      <td>0.114622</td>
+      <td>0.108152</td>
+      <td>0.022018</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>100000.0</td>
-      <td>20.0</td>
-      <td>1.000000e+14</td>
-      <td>0.079719</td>
-      <td>0.185064</td>
-      <td>0.166824</td>
+      <td>10.0</td>
+      <td>1.000000e+15</td>
+      <td>10000.0</td>
+      <td>1.048925</td>
+      <td>0.958338</td>
+      <td>0.215099</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>100000.0</td>
-      <td>30.0</td>
-      <td>1.000000e+14</td>
-      <td>0.062672</td>
-      <td>0.174883</td>
-      <td>0.211890</td>
+      <td>10.0</td>
+      <td>1.000000e+16</td>
+      <td>10000.0</td>
+      <td>5.189712</td>
+      <td>4.045272</td>
+      <td>1.567682</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>100000.0</td>
-      <td>40.0</td>
-      <td>1.000000e+14</td>
-      <td>0.051761</td>
-      <td>0.158660</td>
-      <td>0.224313</td>
+      <td>10.0</td>
+      <td>1.000000e+17</td>
+      <td>10000.0</td>
+      <td>6.561081</td>
+      <td>5.156221</td>
+      <td>3.411413</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>100000.0</td>
-      <td>50.0</td>
-      <td>1.000000e+14</td>
-      <td>0.044285</td>
-      <td>0.143712</td>
-      <td>0.223537</td>
+      <td>10.0</td>
+      <td>1.000000e+18</td>
+      <td>10000.0</td>
+      <td>6.639451</td>
+      <td>5.259944</td>
+      <td>3.822848</td>
     </tr>
   </tbody>
 </table>
@@ -434,18 +459,90 @@ obect or Schwimmbad’s
 Note the time in the example below compared to the grid above.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tic</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
 <span class="n">pool</span><span class="o">=</span><span class="n">Pool</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
-<span class="n">grid_df</span> <span class="o">=</span> <span class="n">radex</span><span class="o">.</span><span class="n">run_grid</span><span class="p">(</span><span class="n">density_values</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">1.0e5</span><span class="p">,</span> <span class="mf">1.0e6</span><span class="p">,</span> <span class="mf">1.0e5</span><span class="p">),</span> <span class="n">temperature_values</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-                   <span class="n">column_density_values</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">1.0e14</span><span class="p">,</span> <span class="mf">1.0e15</span><span class="p">,</span> <span class="mf">1.0e14</span><span class="p">),</span> <span class="n">molfile</span><span class="o">=</span><span class="s1">&#39;co.dat&#39;</span><span class="p">,</span>
-                   <span class="n">target_value</span><span class="o">=</span><span class="s2">&quot;T_R (K)&quot;</span><span class="p">,</span><span class="n">pool</span><span class="o">=</span><span class="n">pool</span><span class="p">)</span>
+<span class="n">grid_df</span> <span class="o">=</span> <span class="n">radex</span><span class="o">.</span><span class="n">run_grid</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span><span class="n">target_value</span><span class="o">=</span><span class="s2">&quot;T_R (K)&quot;</span><span class="p">,</span><span class="n">pool</span><span class="o">=</span><span class="n">pool</span><span class="p">)</span>
 <span class="n">toc</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;run_grid took {toc-tic:0.4f} seconds with a pool of 8 workers&quot;</span><span class="p">)</span>
+<span class="n">grid_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mi">728</span><span class="p">,</span> <span class="mi">43</span><span class="p">)</span>
-<span class="n">run_grid</span> <span class="n">took</span> <span class="mf">2.2611</span> <span class="n">seconds</span> <span class="k">with</span> <span class="n">a</span> <span class="n">pool</span> <span class="n">of</span> <span class="mi">8</span> <span class="n">workers</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">run_grid</span> <span class="n">took</span> <span class="mf">0.7459</span> <span class="n">seconds</span> <span class="k">with</span> <span class="n">a</span> <span class="n">pool</span> <span class="n">of</span> <span class="mi">8</span> <span class="n">workers</span>
 </pre></div>
 </div>
-</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>tkin</th>
+      <th>cdmol</th>
+      <th>h2</th>
+      <th>(1)-(0)[115.2712018 GHz]</th>
+      <th>(2)-(1)[230.538 GHz]</th>
+      <th>(3)-(2)[345.7959899 GHz]</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>10.0</td>
+      <td>1.000000e+14</td>
+      <td>10000.0</td>
+      <td>0.114622</td>
+      <td>0.108152</td>
+      <td>0.022018</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>10.0</td>
+      <td>1.000000e+15</td>
+      <td>10000.0</td>
+      <td>1.048925</td>
+      <td>0.958338</td>
+      <td>0.215099</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>10.0</td>
+      <td>1.000000e+16</td>
+      <td>10000.0</td>
+      <td>5.189712</td>
+      <td>4.045272</td>
+      <td>1.567682</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>10.0</td>
+      <td>1.000000e+17</td>
+      <td>10000.0</td>
+      <td>6.561081</td>
+      <td>5.156221</td>
+      <td>3.411413</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>10.0</td>
+      <td>1.000000e+18</td>
+      <td>10000.0</td>
+      <td>6.639451</td>
+      <td>5.259944</td>
+      <td>3.822848</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
 </div>
 </div>
 

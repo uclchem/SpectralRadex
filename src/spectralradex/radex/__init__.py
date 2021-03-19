@@ -37,33 +37,24 @@ def run(parameters, output_file=None):
     return output
 
 
-def format_run_for_grid(line_count, parameters, target_value, columns, grid_parameters):
+def format_run_for_grid(line_count, parameters, target_value, columns,grid_variables, grid_parameters):
     """
     Simple function to set up and reformat the output of :func:`run` for :func:`run_grid`
     :meta private:
     """
-    parameters["h2"] = grid_parameters[0]
-    parameters["tkin"] = grid_parameters[1]
-    parameters["cdmol"] = grid_parameters[2]
+    for i,variable in enumerate(grid_variables):
+        parameters[variable] = grid_parameters[i]
     radex_output = run(parameters)
     transition_value = radex_output.iloc[:line_count][target_value].to_list()
-    return DataFrame([[parameters["h2"], parameters["tkin"], parameters["cdmol"]] + transition_value], columns=columns)
+    return DataFrame([[parameters[x] for x in grid_variables] + transition_value], columns=columns)
 
 
-def run_grid(density_values, temperature_values, column_density_values, molfile,
+def run_grid(parameters,
              target_value="FLUX (K*km/s)", freq_range=[0, 3.0e7], pool=None):
     """
-    Runs a grid of RADEX models using all combinations of input lists of H2 density, temperature, and the molecular column 
-    density. Returns a dataframe of results and can be parallelized with the ``pool`` parameter.
+    Runs a grid of RADEX models using all combinations of any iterable items in the parameters dictionary whilst keeping other parameters constant. Returns a dataframe of results and can be parallelized with the ``pool`` parameter.
 
-    :param density_values: A list of density values for which RADEX models should be run.
-    :type density_values: iterable
-
-    :param temperature_values: A list of temperature values for which RADEX models should be run.
-    :type temperature_values: iterable
-
-    :param column_density_values: A list of column density values for which RADEX models should be run.
-    :type column_density_values: iterable
+    :param parameters: A dictionary of parameters as provided by :func:`get_default_parameters` or :func:`get_example_grid_parameters`. Parameters should take a single value when they are constant over the grid and contain and interable if they are to be varied.
 
     :param molfile: Collisional data file for the molecule for which the emission should be calculated.
     :type molfile: str
@@ -79,28 +70,26 @@ def run_grid(density_values, temperature_values, column_density_values, molfile,
     :type pool: Pool, optional
     """
 
+    #cleaning up and checking inputs
     if type(target_value) != str:
         if (target_value != "T_R (K)" or target_value != "FLUX (K*km/s)" or target_value != "FLUX (erg/cm2/s)"):
             print("target_value must be a string and one of the following three options: 'T_R (K)', 'FLUX (K*km/s)', 'FLUX (erg/cm2/s)'")
             exit()
-    if type(molfile) != str:
-        print("molfile must be a string of the moleculer data file to be used.")
-        exit()
-    parameters = get_default_parameters()
-    parameters["fmin"] = freq_range[0]
-    parameters["fmax"] = freq_range[1]
-    parameters["molfile"] = molfile
-    parameter_grid = np.array(np.meshgrid(density_values, temperature_values, column_density_values))
-    parameter_combinations = parameter_grid.T.reshape(-1, 3)
-    del parameter_grid
+    if parameters["molfile"][0] != "/":
+        parameters["molfile"] = add_data_path(parameters["molfile"])
 
-    parameters["h2"] = parameter_combinations[0, 0]
-    parameters["tkin"] = parameter_combinations[0, 1]
-    parameters["cdmol"] = parameter_combinations[0, 2]
-    parameter_combinations = np.delete(parameter_combinations, 0, axis=0)
+    #get list of varying parameters
+    variables=[key for key,value in parameters.items() if is_iter(value) and key!="molfile"]
+
+    parameter_grid = np.array(np.meshgrid(*[parameters[x] for x in variables]))
+    parameter_grid = parameter_grid.T.reshape(-1, len(variables))
+    parameters=parameters.copy()
+    for i,variable in enumerate(variables):
+        parameters[variable]=parameter_grid[0,i]
+    parameter_combinations = np.delete(parameter_grid, 0, axis=0)
     radex_output = run(parameters)
 
-    dataframe_columns = ["Density", "Temperature", "Column Density"]
+    dataframe_columns = variables[:]
     line_count = np.shape(radex_output)[0]
     transition_value = []
     for line in range(line_count):
@@ -109,21 +98,20 @@ def run_grid(density_values, temperature_values, column_density_values, molfile,
                           str(radex_output.iloc[line]['freq']) + " GHz]"
         dataframe_columns += [transition_name]
         transition_value += [radex_output.iloc[line][target_value]]
-    output = DataFrame(columns=dataframe_columns, data=[[parameters["h2"], parameters["tkin"],
-                                                         parameters["cdmol"]] + transition_value])
+    output = DataFrame(columns=dataframe_columns, data=[[parameters[x] for x in variables] + transition_value])
 
     if pool is not None:
-        func = partial(format_run_for_grid, line_count, parameters, target_value, dataframe_columns)
+        func = partial(format_run_for_grid, line_count, parameters, target_value, dataframe_columns,variables)
         pool_results = pool.map(func, parameter_combinations)
         pool.close()
         pool.join()
         pool_results_df = concat(pool_results, axis=0)
-        print(np.shape(pool_results_df))
         output = output.append(pool_results_df, ignore_index=True)
     else:
         for grid_point in range(len(parameter_combinations)):
-            output = output.append(format_run_for_grid(line_count, parameters, target_value, dataframe_columns,
-                                             parameter_combinations[grid_point]), ignore_index=True)
+            output = output.append(format_run_for_grid(line_count, parameters,
+                                            target_value, dataframe_columns,variables,
+                                            parameter_combinations[grid_point]), ignore_index=True)
 
     return output
 
@@ -156,6 +144,29 @@ def get_default_parameters():
     }
     return parameters
 
+def get_example_grid_parameters():
+    """
+    Returns a dictionary of parameters for RADEX with iterables which can be used with :func:`run_grid`.
+    """
+
+    parameters = {
+        "molfile": "co.dat",
+        "tkin": np.linspace(10,300,5),
+        "tbg": 2.73,
+        "cdmol": np.logspace(14,18,5),
+        "h2": np.logspace(4,7,5),
+        "h": 0.0,
+        "e-": 0.0,
+        "p-h2": 0.0,
+        "o-h2": 0.0,
+        "h+": 0.0,
+        "linewidth": 1.0,
+        "fmin": 0.0,
+        "fmax": 3.0e7,
+        "geometry":1
+    }
+    return parameters
+
 
 def add_data_path(filename):
     """
@@ -172,3 +183,6 @@ def list_data_files():
     file in the parameter dictionary to use one not packaged with SpectralRadex.
     """
     print(os.listdir(os.path.join(_ROOT, "data")))
+
+def is_iter(x):
+    return hasattr(x, '__iter__')

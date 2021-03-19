@@ -13,8 +13,9 @@ spectrum.
 .. code:: python
 
     import spectralradex
-    import matplotlib.pyplot as plt
     import numpy as np
+    import pandas as pd
+    import matplotlib.pyplot as plt
 
 First, we need a radex model. This is just a dictionary with the RADEX
 inputs as keys. For this example, we’ll start by grabbing the default
@@ -37,7 +38,7 @@ density and the linewidth as well as setting fmax to 300 GHz.
 
 .. parsed-literal::
 
-    {'molfile': 'co.dat', 'tkin': 30.0, 'tbg': 2.73, 'cdmol': 1e+16, 'h2': 100000.0, 'h': 0.0, 'e-': 0.0, 'p-h2': 10000.0, 'o-h2': 10000.0, 'h+': 0.0, 'linewidth': 10, 'fmin': 0.0, 'fmax': 300}
+    {'molfile': 'co.dat', 'tkin': 30.0, 'tbg': 2.73, 'cdmol': 1e+16, 'h2': 100000.0, 'h': 0.0, 'e-': 0.0, 'p-h2': 10000.0, 'o-h2': 10000.0, 'h+': 0.0, 'linewidth': 10, 'fmin': 0.0, 'fmax': 300, 'geometry': 1}
 
 
 We also need a list of frequencies over which we’d like the spectrum.
@@ -54,13 +55,20 @@ observations: the frequency bins you observed and the assume
 
     frequencies=np.arange(80,300,0.005)
     v0=0.0
-    spectrum=spectralradex.calculate_spectrum(frequencies,v0,radex_params)
+    spectrum=spectralradex.model_spectrum(frequencies,v0,radex_params)
+
+
+.. parsed-literal::
+
+    /home/jon/.local/lib/python3.7/site-packages/spectralradex/__init__.py:84: RuntimeWarning: invalid value encountered in true_divide
+      rad_weights=np.sum(rad_weights,axis=0)/taus
+
 
 .. code:: python
 
     fig,ax=plt.subplots(figsize=(16,9))
     ax.plot(spectrum["Frequency"],spectrum["Intensity"],drawstyle="steps-mid")
-    settings=ax.set(xlim=(90,300.6),xlabel="Frequency / GHz",ylabel="T / K")
+    settings=ax.set(xlabel="Frequency / GHz",ylabel="T / K")
 
 
 
@@ -74,14 +82,20 @@ assume for all line in SpectralRadex.
 .. code:: python
 
     radex_params["linewidth"]=100
-    spectrum=spectralradex.calculate_spectrum(frequencies,v0,radex_params)
+    spectrum=spectralradex.model_spectrum(frequencies,v0,radex_params)
     fig,ax=plt.subplots(figsize=(16,9))
     ax.plot(spectrum["Frequency"],spectrum["Intensity"],drawstyle="steps-mid")
     settings=ax.set(xlim=(115.1,115.45),ylim=(0,0.1),xlabel="Frequency / GHz",ylabel="T / K")
 
 
+.. parsed-literal::
 
-.. image:: spectralmodelling_files/spectralmodelling_9_0.png
+    /home/jon/.local/lib/python3.7/site-packages/spectralradex/__init__.py:84: RuntimeWarning: invalid value encountered in true_divide
+      rad_weights=np.sum(rad_weights,axis=0)/taus
+
+
+
+.. image:: spectralmodelling_files/spectralmodelling_9_1.png
 
 
 Finally, please note that if you sample with too large a frequency bin,
@@ -95,13 +109,18 @@ Here we repeat the above calculation with a 50 MHz frequency spacing.
 
     frequencies=np.arange(30,300,0.05)
     v0=0.0
-    spectrum=spectralradex.calculate_spectrum(frequencies,v0,radex_params)
+    spectrum=spectralradex.model_spectrum(frequencies,v0,radex_params)
     fig,ax=plt.subplots(figsize=(16,9))
     ax.plot(spectrum["Frequency"],spectrum["Intensity"],drawstyle="steps-mid")
     settings=ax.set(xlim=(90,300.6),xlabel="Frequency / GHz",ylabel="T / K")
 
 
+.. parsed-literal::
 
-.. image:: spectralmodelling_files/spectralmodelling_11_0.png
+    /home/jon/.local/lib/python3.7/site-packages/spectralradex/__init__.py:84: RuntimeWarning: invalid value encountered in true_divide
+      rad_weights=np.sum(rad_weights,axis=0)/taus
 
+
+
+.. image:: spectralmodelling_files/spectralmodelling_11_1.png
 
