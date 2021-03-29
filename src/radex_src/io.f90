@@ -507,12 +507,13 @@ CONTAINS
     98   write(*,*) 'error opening output file'
   END SUBROUTINE Output
 
-  SUBROUTINE ParseInputDictionary(dictionary)
+  SUBROUTINE ParseInputDictionary(dictionary,success)
     CHARACTER(LEN=*) :: dictionary
     INTEGER :: ipart        ! loop over collision partners
     CHARACTER(10) :: partner ! name of collision partner
     INTEGER :: id           ! ID code of collision partner
     LOGICAL :: unreadParameters
+    INTEGER, INTENT(INOUT) :: success
     INTEGER :: posStart,posEnd !variables to help parse dictionary
     CHARACTER(LEN=200) :: inputParameter, inputValue !temporary storage for inputs
     unreadParameters=.True.
@@ -545,26 +546,30 @@ CONTAINS
           READ(inputValue,*) tkin
           IF ((tkin.lt.0.1).or.(tkin.gt.1.e4)) THEN
             WRITE(*,*) 'Please enter a TKin between 0.1 and 1e4'
-            STOP
+            success=0
+            RETURN
           END IF
         CASE("tbg")
           READ(inputValue,*) tbg
           IF ((tbg.lt.-1.e4).or.(tbg.gt.1.e4)) THEN
             WRITE(*,*)'Please enter a value between -1e4 and 1e4'
-            STOP
+            success=0
+            RETURN
           END IF
         CASE("linewidth")
           READ(inputValue,*) deltav
           IF ((deltav.lt.1.e-3).or.(deltav.gt.1.e3)) THEN
             WRITE(*,*)'Please enter a value between 1e-3 and 1e3'
-            STOP
+            success=0
+            RETURN
           END IF
           deltav = deltav * 1.0e5
         CASE("cdmol")
           READ(inputValue,*) cdmol
           IF ((cdmol.lt.1.e5).or.(cdmol.gt.1.e25)) THEN
             WRITE(*,*)'Please enter a column density between 1e5 and 1e25'
-            STOP
+            success=0
+            RETURN
           END IF
         CASE('h2')
           READ(inputValue,*) density(1)

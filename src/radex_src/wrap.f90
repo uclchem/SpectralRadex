@@ -13,26 +13,26 @@
 !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
 
-SUBROUTINE RADEX(inputDictionary,nlines,Qup,Qlow,lineOutputs)
+SUBROUTINE RADEX(inputDictionary,success_flag,nlines,Qup,Qlow,lineOutputs)
 USE IO
 USE Solver
 USE Background
 IMPLICIT NONE
     !Main program: controls program flow and drives subroutines
     CHARACTER(*) :: inputDictionary
-    INTEGER :: niter,nlines,iline   ! iteration counters
+    INTEGER :: niter,nlines,success_flag,iline   ! iteration counters
     DOUBLE PRECISION :: lineOutputs(10,500)
     CHARACTER(6) :: Qup(3000),Qlow(3000)
     LOGICAL :: conv    ! are we converged?
     !f2py intent(in) inputDictionary
-    !f2py intent(out) nlines, Qup,Qlow,lineOutputs
-
+    !f2py intent(out) success_flag,nlines, Qup,Qlow,lineOutputs
+    success_flag=1
     !     Get input parameters
     IF (DEBUG) write(*,*) 'calling getinputs'
 
-    CALL parseInputDictionary(inputDictionary)
+    CALL parseInputDictionary(inputDictionary,success_flag)
     !     Read data file
-
+    IF (success_flag .ne. 1) RETURN
     IF (DEBUG) write(*,*) 'calling readdata'
     CALL ReadData
 
@@ -64,7 +64,7 @@ IMPLICIT NONE
     IF (DEBUG) write(*,*) 'calculating output summary variables'
     CALL CalcOutputArrays(nlines)
     niter=1
-    DO iline=1,nline
+    DO iline=1,nlines
       !Check if line within output freq range
       IF (spfreq(iline).lt.fmax.and.spfreq(iline).gt.fmin) THEN
         lineOutputs(:,niter)=(/eup(iline),spfreq(iline),wavelength(iline),&

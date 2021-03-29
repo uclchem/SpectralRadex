@@ -24,17 +24,21 @@ def run(parameters, output_file=None):
 
     if parameters["molfile"][0] != "/":
         parameters["molfile"] = add_data_path(parameters["molfile"])
-
-    nlines, qup, qlow, output = radex(parameters)
-    output = DataFrame(columns=columns, data=output[:, :nlines].T)
-    output["QN Upper"] = qup.reshape(-1, 6).view('S6')[:nlines]
-    output["QN Lower"] = qlow.reshape(-1, 6).view('S6')[:nlines]
-    output["Qup"] = output["QN Upper"].map(lambda x: x.decode('UTF-8')).str.strip()
-    output["Qlow"] = output["QN Lower"].map(lambda x: x.decode('UTF-8')).str.strip()
-    output=output.drop(["QN Upper","QN Lower"],axis=1)
-    if output_file is not None:
-        output.to_csv(output_file, index=False)
-    return output
+    success,nlines, qup, qlow, output = radex(parameters)
+    if success==1:
+        output = DataFrame(columns=columns, data=output[:, :nlines].T)
+        output["QN Upper"] = qup.reshape(-1, 6).view('S6')[:nlines]
+        output["QN Lower"] = qlow.reshape(-1, 6).view('S6')[:nlines]
+        output["Qup"] = output["QN Upper"].map(lambda x: x.decode('UTF-8')).str.strip()
+        output["Qlow"] = output["QN Lower"].map(lambda x: x.decode('UTF-8')).str.strip()
+        output=output.drop(["QN Upper","QN Lower"],axis=1)
+        if output_file is not None:
+            output.to_csv(output_file, index=False)
+        return output
+    else:
+        print("RADEX Failed, check RADEX error messages\nYour parameters were:\n")
+        print(parameters)
+        return None
 
 
 def format_run_for_grid(line_count, parameters, target_value, columns,grid_variables, grid_parameters):

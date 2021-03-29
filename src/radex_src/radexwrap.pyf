@@ -3,12 +3,13 @@
 
 python module radexwrap ! in 
     interface  ! in :radexwrap
-        subroutine radex(inputdictionary,nlines,qup,qlow,lineoutputs) ! in :radexwrap:wrap.f90
+        subroutine radex(inputdictionary,success_flag,nlines,qup,qlow,lineoutputs) ! in :radexwrap:wrap.f90
             use io
             use solver
             use background
             character*(*) intent(in) :: inputdictionary
             integer intent(out) :: nlines
+            integer intent(out) :: success_flag
             character(len=6) dimension(3000),intent(out) :: qup
             character(len=6) dimension(3000),intent(out) :: qlow
             double precision dimension(10,500),intent(out) :: lineoutputs
