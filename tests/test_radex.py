@@ -11,6 +11,7 @@ import time
 params = radex.get_default_parameters()
 params["molfile"] = "co.dat"
 output = radex.run(params)
+print(output)
 params = radex.get_default_parameters()
 
 params["tkin"]=1e5

@@ -14,14 +14,14 @@ CONTAINS
     RETURN
   END
 
-  SUBROUTINE lubksb(a,n,np,indx,b)
-    INTEGER :: n,np,indx(np)
+  SUBROUTINE lubksb(a,n,np,indx,b,success_flag)
+    INTEGER :: n,np,indx(np),success_flag
     REAL(dp) :: a(np,np),b(np)
 
     REAL(dp) :: ra(n-1,n-1),rb(n-1)
     INTEGER :: itask,iwork(n-1),ind,i,j
     REAL(dp) :: work((n-1)*(n-1+1))
-
+    success_flag=1
     itask=1
 
     !Requires "smaller" matrix: nlev*nlev only, with last equation
@@ -39,7 +39,10 @@ CONTAINS
     enddo
     rb(n-1)=1.
     CALL sgeir(ra,n-1,n-1,rb,itask,ind,work,iwork)
-
+    IF ((ind .lt. 0) .and. (ind .gt. -5)) THEN
+      success_flag=0
+      RETURN
+    END IF
     do i=1,n-1
       b(i)=rb(i)
     enddo
@@ -2068,7 +2071,7 @@ CONTAINS
     ! IMPLICIT INTEGER :: (I-N)
     ! IMPLICIT REAL(dp) :: (A-H,O-Z)
     CHARACTER*(*) MESSG
-    STOP
+    !STOP
   END SUBROUTINE XERHLT
 
   !***BEGIN PROLOGUE  XERPRN

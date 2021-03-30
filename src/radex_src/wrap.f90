@@ -46,12 +46,14 @@ IMPLICIT NONE
     !Set up rate matrix, splitting it in radiative and collisional parts
     !Invert rate matrix to get `thin' starting condition
     IF (DEBUG) write(*,*) 'calling matrix'
-    CALL matrix(niter,conv)
+    CALL matrix(niter,conv,success_flag)
+    IF (success_flag .ne. 1) RETURN
 
     !Start iterating
     DO niter=1,maxiter
         !Invert rate matrix using escape probability for line photons
-        CALL matrix(niter,conv)
+        CALL matrix(niter,conv,success_flag)
+        IF (success_flag .ne. 1) RETURN
         IF (conv) THEN
             EXIT
         END IF

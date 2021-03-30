@@ -49,7 +49,10 @@ def format_run_for_grid(line_count, parameters, target_value, columns,grid_varia
     for i,variable in enumerate(grid_variables):
         parameters[variable] = grid_parameters[i]
     radex_output = run(parameters)
-    transition_value = radex_output.iloc[:line_count][target_value].to_list()
+    if radex_output is not None:
+        transition_value = radex_output.iloc[:line_count][target_value].to_list()
+    else:
+        transition_value=list(np.ones(len(line_count))*np.nan)
     return DataFrame([[parameters[x] for x in grid_variables] + transition_value], columns=columns)
 
 

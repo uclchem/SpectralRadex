@@ -4,7 +4,7 @@ USE Slatec
 USE types
 IMPLICIT NONE
 Contains
-  SUBROUTINE Matrix(niter,conv)
+  SUBROUTINE Matrix(niter,conv,success_flag)
     !     Set up rate matrix
     INTEGER :: niter            ! iteration counter
     INTEGER :: ilev,jlev,klev   ! to loop over energy levels
@@ -15,6 +15,7 @@ Contains
     INTEGER :: nfat             ! counts highly optically thick lines
     INTEGER :: nreduce          ! size of reduced rate matrix
     INTEGER :: indx(maxlev),dsign       ! needed for NumRep equation solver
+    INTEGER :: terminate,success_flag
 
     REAL(dp) :: rhs(maxlev)           ! RHS of rate equation
     REAL(dp) :: yrate(maxlev,maxlev)  ! rate matrix
@@ -207,7 +208,8 @@ Contains
       IF (debug) WRITE(*,*) 'inverting reduced matrix...'
 
       !call ludcmp(uarray,nreduce+1,maxlev,indx,dsign)
-      call lubksb(uarray,nreduce+1,maxlev,indx,rhs)
+      call lubksb(uarray,nreduce+1,maxlev,indx,rhs,success_flag)
+      IF (success_flag .eq.0) RETURN
 
       IF (debug) WRITE(*,*) 'computing cascade...'
 
@@ -225,7 +227,8 @@ Contains
     ELSE  !if we don't want to reduce
        IF (debug) WRITE(*,*) 'inverting non-reduced matrix...'
        !call ludcmp(yrate,nplus,maxlev,indx,dsign)
-       call lubksb(yrate,nplus,maxlev,indx,rhs)
+       call lubksb(yrate,nplus,maxlev,indx,rhs,success_flag)
+       IF (success_flag .eq.0) RETURN
     END IF
 
     !     Level populations are the normalized RHS components
