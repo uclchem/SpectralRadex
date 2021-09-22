@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trouble Shooting &mdash; SpectralRadex 0.1.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Spectral Modelling Functions" href="../api/spectralradex.html" />
+    <link rel="prev" title="Referencing" href="referencing.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> SpectralRadex
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="formalism.html">Formalism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="referencing.html">Referencing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Trouble Shooting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#malloc-error">Malloc() Error</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mac-issues">Mac Issues</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/spectralradex.html">Spectral Modelling Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/radex.html">Radex Wrapper Functions</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/radex.html">Radex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/spectralmodelling.html">Spectral Modelling</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SpectralRadex</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Trouble Shooting</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/user/trouble.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="trouble-shooting">
+<span id="trouble"></span><h1>Trouble Shooting<a class="headerlink" href="#trouble-shooting" title="Permalink to this headline"></a></h1>
+<section id="malloc-error">
+<h2>Malloc() Error<a class="headerlink" href="#malloc-error" title="Permalink to this headline"></a></h2>
+<p>SpectralRadex can return results for up to 500 transitions. This number is hard coded because Fortran cannot use variable sized arrays as part of the python interface and so we had to choose a number which trades off a reasonably high maximum with the fact a massive array would take up a lot of memory without being needed in 99% of cases. However, if you run a species such as CH3OH over a very large frequency range, you can have more transitions than this. This will result in an error</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>malloc<span class="o">()</span>: corrupted top size
+Abort <span class="o">(</span>core dumped<span class="o">)</span>
+</pre></div>
+</div>
+<p>which can be resolved by setting fmin and fmax such that there are fewer than 500 transitions in the range of interest. If you require more than 500 transitions, please contact us via github or email.</p>
+</section>
+<section id="mac-issues">
+<h2>Mac Issues<a class="headerlink" href="#mac-issues" title="Permalink to this headline"></a></h2>
+<p><strong>Import Error… library not loaded</strong></p>
+<p>Recent updates to Mac OS have resulted in many Mac user’s python distributions expecting the standard Fortran libraries to be in one place when they’re actually in another. The resulting error message looks like</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ne">Exception</span> <span class="n">has</span> <span class="n">occurred</span><span class="p">:</span> <span class="n">ImportErrordlopen</span><span class="p">(</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.9</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">radexwrap</span><span class="o">.</span><span class="n">cpython</span><span class="o">-</span><span class="mi">39</span><span class="o">-</span><span class="n">darwin</span><span class="o">.</span><span class="n">so</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="n">Library</span> <span class="ow">not</span> <span class="n">loaded</span><span class="p">:</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">gcc</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">gcc</span><span class="o">/</span><span class="mi">10</span><span class="o">/</span><span class="n">libgfortran</span><span class="mf">.5</span><span class="o">.</span><span class="n">dylib</span>   <span class="n">Referenced</span> <span class="n">from</span><span class="p">:</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.9</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">radexwrap</span><span class="o">.</span><span class="n">cpython</span><span class="o">-</span><span class="mi">39</span><span class="o">-</span><span class="n">darwin</span><span class="o">.</span><span class="n">so</span>   <span class="n">Reason</span><span class="p">:</span> <span class="n">image</span> <span class="ow">not</span> <span class="n">found</span>
+</pre></div>
+</div>
+<p>In this case, SpectralRadex wants the libgfortran.5.dylib library and can’t find it. You can solve this with locate</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>locate libgfortran.5.dylib
+</pre></div>
+</div>
+<p>which will tell you the actual location of the required library and then you can link it to the expected location.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ln</span> <span class="o">/</span><span class="n">actual</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">libgfortran</span><span class="mf">.5</span><span class="o">.</span><span class="n">dylib</span> <span class="o">/</span><span class="n">the</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">expected</span><span class="o">/</span><span class="n">libgfortran</span><span class="mf">.5</span><span class="o">.</span><span class="n">dylib</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="referencing.html" class="btn btn-neutral float-left" title="Referencing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../api/spectralradex.html" class="btn btn-neutral float-right" title="Spectral Modelling Functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Jonathan Holdship.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

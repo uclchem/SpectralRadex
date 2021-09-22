@@ -1,0 +1,65 @@
+!MOLECULE
+HD spectroscopy from CDMS version 2 of December 2011                                                              
+!MOLECULAR WEIGHT
+   3.0   
+!NUMBER OF ENERGY LEVELS
+           9
+!LEVEL + ENERGIES(cm^-1) + WEIGHT + J (or other quantum numbers)
+    1     0.000000000   1.0   0
+    2    89.227931611   3.0   1
+    3   267.069663831   5.0   2
+    4   532.310801589   7.0   3
+    5   883.163758456   9.0   4
+    6  1317.309260961  11.0   5
+    7  1831.950752927  13.0   6
+    8  2423.883499771  15.0   7
+    9  3089.576092837  17.0   8 
+!NUMBER OF RADIATIVE TRANSITIONS
+           8
+!TRANS + U + L + A(s^-1) + FREQ(GHz) + E_u/k(K)
+     1     2     1  5.442E-08        2674.98609400   128.4       
+     2     3     2  5.159E-07        5331.56195140   384.3       
+     3     4     3  1.828E-06        7951.72818080   765.9      
+     4     5     4  4.365E-06       10518.30708120  1270.7     
+     5     6     5  8.405E-06       13015.35348710  1895.3     
+     6     7     6  1.410E-05       15428.56561410  2635.8     
+     7     8     7  2.150E-05       17745.69590350  3487.4       
+     8     9     8  3.051E-05       19956.96186790  4445.2     
+!NUMBER OF COLL PARTNERS
+2
+!COLLISIONS BETWEEN
+2 HD-pH2 rates from Table 2 of Flower (1999, J.Phys B), except the J = 2-0 data which are from Table 1.
+!NUMBER OF COLLISIONAL TRANSITIONS
+9
+!NUMBER OF TEMPERATURES
+3
+!TEMPERATURES
+   50.0   100.0  200.0 
+!TRANS + UP + LOW + RATES [cm3 s-1]
+1	2	1	2.2e-11	 2.7e-11  3.9e-11
+2	3	1	1.6e-12	 2.1e-12  3.6e-12
+3	3	2	3.3e-11	 3.9e-11  5.3e-11
+4	4 	3	2.8e-11	 3.4e-11  4.9e-11
+5	5 	4	1.8e-11	 2.4e-11  3.7e-11
+6	6	5	1.3e-11	 1.5e-11  2.5e-11
+7	7 	6	4.7e-12	 7.6e-12  1.5e-11
+8	8	7	2.6e-12	 4.0e-12  9.2e-12
+9	9	8	1.4e-12	 2.0e-12  5.5e-12
+!COLLISIONS BETWEEN
+3 HD-oH2 rates from Table 2 of Flower (1999, J.Phys B), except the J = 2-0 data which are from Table 1.
+!NUMBER OF COLLISIONAL TRANSITIONS
+9
+!NUMBER OF TEMPERATURES
+3
+!TEMPERATURES
+   50.0   100.0  200.0 
+!TRANS + UP + LOW + RATES [cm3 s-1]
+1	2	1	2.2e-11	 2.7e-11  3.9e-11
+2	3	1	1.8e-12	 2.3e-12  3.9e-12
+3	3	2	3.3e-11	 3.9e-11  5.3e-11
+4	4 	3	2.8e-11	 3.4e-11  5.0e-11
+5	5 	4	1.8e-11	 2.4e-11  3.8e-11
+6	6	5	1.3e-11	 1.6e-11  2.6e-11
+7	7 	6	4.8e-12	 7.8e-12  1.6e-11
+8	8	7	2.7e-12	 4.1e-12  9.5e-12
+9	9	8	1.5e-12	 2.1e-12  5.6e-12

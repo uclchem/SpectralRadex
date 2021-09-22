@@ -9,11 +9,11 @@ _ROOT = os.path.dirname(os.path.abspath(__file__))
 
 def run(parameters, output_file=None):
     """
-    Run a single RADEX model
+    Run a single RADEX model using a dictionary to set parameters.
 
     :param parameters: A dictionary containing the RADEX inputs that the user wishes to set,
         all other parameters will use the default values. See :func:`get_default_parameters`
-        for a list of possible parameters.
+        for a list of possible parameters and :func:`run_params` for descriptions.
     :type parameters: dict
 
     :param output_file: If not ``None``, the RADEX results are stored to this file in csv format/
@@ -22,9 +22,10 @@ def run(parameters, output_file=None):
     columns = ['E_UP (K)', 'freq', 'WAVEL (um)', 'T_ex', 'tau',
                'T_R (K)', 'POP UP', 'POP LOW', 'FLUX (K*km/s)', 'FLUX (erg/cm2/s)']
 
-    if parameters["molfile"][0] != "/":
-        parameters["molfile"] = add_data_path(parameters["molfile"])
-    success,nlines, qup, qlow, output = radex(parameters)
+
+
+    parameters["molfile"] = add_data_path(parameters["molfile"])
+    success,nlines, qup, qlow, output = from_dict(parameters)
     if success==1:
         output = DataFrame(columns=columns, data=output[:, :nlines].T)
         output["QN Upper"] = qup.reshape(-1, 6).view('S6')[:nlines]
@@ -32,6 +33,9 @@ def run(parameters, output_file=None):
         output["Qup"] = output["QN Upper"].map(lambda x: x.decode('UTF-8')).str.strip()
         output["Qlow"] = output["QN Lower"].map(lambda x: x.decode('UTF-8')).str.strip()
         output=output.drop(["QN Upper","QN Lower"],axis=1)
+        output=output[output["freq"]>parameters["fmin"]]
+        output=output[output["freq"]<parameters["fmax"]]
+
         if output_file is not None:
             output.to_csv(output_file, index=False)
         return output
@@ -40,24 +44,83 @@ def run(parameters, output_file=None):
         print(parameters)
         return None
 
+def run_params(molfile,tkin,cdmol,nh=0.0,nh2=0.0,op_ratio=3.0,ne=0.0,nhe=0.0,nhx=0.0,
+        linewidth=1.0,fmin=0.0,fmax=500.0,tbg=2.73,geometry=1, output_file=None):
+    """
+    Run a single RADEX model from individual parameters
 
-def format_run_for_grid(line_count, parameters, target_value, columns,grid_variables, grid_parameters):
+    :param molfile: Either the full path, starting from . or / to a datafile in the Lamda database
+                    format or the filename of a datafile from `list_data_files()`.
+    :type molfile: str
+
+    :param tkin: Temperature of the Gas in Kelvin
+    :type molfile: float
+
+    :param cdmol: Column density of the emitting species in cm :math:`^{-2}`
+    :type molfile: float
+
+    :param nh: Number density of H atoms
+    :type nh: float, optional
+
+    :param nh2: Total number density of H2 molecules, set this to o-H2 + p-H2 if using ortho and para H2 as collisional partners.
+    :type nh2: float, optional
+    
+    :param op_ratio: Ortho to para ratio for H2. Defaults to statistical limit of 3 and used to set o-H2 and p-H2 densities from nh2.
+    :type op_ratio: float, optional
+
+    :param ne: Number density of electron.
+    :type ne: float, optional
+    
+    :param nhe: Number density of He atoms.
+    :type nhe: float, optional 
+    
+    :param nhx: Number density of H+ ions.
+    :type nh: float, optional
+
+    :param linewidth: FWHM of the line in km s :math:`^{-1}`.
+    :type linewidth: float, optional
+
+    :param fmin: Minimum frequency below which a line is not included in the results.
+    :type fmin: float, optional
+    
+    :param fmax: Maximum frequency above which a line is not included in the results.
+    :type fmax: float, optional
+
+    :param tbg: Background temperature, defaults to CMB temperature 2.73 K.
+    :type tbg: float, optional  
+
+    :param geometry: Choice of geometry of emitting object. 1 for sphere, 2 for LVG, 3 for slab.
+    :type geometry: int, optional
     """
-    Simple function to set up and reformat the output of :func:`run` for :func:`run_grid`
-    :meta private:
-    """
-    for i,variable in enumerate(grid_variables):
-        parameters[variable] = grid_parameters[i]
-    radex_output = run(parameters)
-    if radex_output is not None:
-        transition_value = radex_output.iloc[:line_count][target_value].to_list()
+    columns = ['E_UP (K)', 'freq', 'WAVEL (um)', 'T_ex', 'tau',
+               'T_R (K)', 'POP UP', 'POP LOW', 'FLUX (K*km/s)', 'FLUX (erg/cm2/s)']
+
+
+    molfile = add_data_path(molfile)
+    ortho=op_ratio/(op_ratio+1.0)
+    para=1.0-ortho
+    densities=[nh2,nh2*ortho,nh2*para,ne,nh,nhe,nhx]
+    success,nlines, qup, qlow, output = from_params(molfile,tkin,tbg,cdmol,densities,
+                                                    linewidth,fmin,fmax,geometry)
+    if success==1:
+        output = DataFrame(columns=columns, data=output[:, :nlines].T)
+        output["QN Upper"] = qup.reshape(-1, 6).view('S6')[:nlines]
+        output["QN Lower"] = qlow.reshape(-1, 6).view('S6')[:nlines]
+        output["Qup"] = output["QN Upper"].map(lambda x: x.decode('UTF-8')).str.strip()
+        output["Qlow"] = output["QN Lower"].map(lambda x: x.decode('UTF-8')).str.strip()
+        output=output.drop(["QN Upper","QN Lower"],axis=1)
+        output=output[output["freq"]>fmin]
+        output=output[output["freq"]<fmax]
+        if output_file is not None:
+            output.to_csv(output_file, index=False)
+        return output
     else:
-        transition_value=list(np.ones(len(line_count))*np.nan)
-    return DataFrame([[parameters[x] for x in grid_variables] + transition_value], columns=columns)
-
+        print("RADEX Failed, check RADEX error messages\nYour parameters were:\n")
+        print(parameters)
+        return None
 
 def run_grid(parameters,
-             target_value="FLUX (K*km/s)", freq_range=[0, 3.0e7], pool=None):
+             target_value="FLUX (K*km/s)", pool=None):
     """
     Runs a grid of RADEX models using all combinations of any iterable items in the parameters dictionary whilst keeping other parameters constant. Returns a dataframe of results and can be parallelized with the ``pool`` parameter.
 
@@ -68,9 +131,6 @@ def run_grid(parameters,
 
     :param target_value: RADEX output column to be returned. Select one of 'T_R (K)', 'FLUX (K*km/s)', 'FLUX (erg/cm2/s)'
     :type target_value: str,optional
-
-    :param freq_range: Limit output lines to be those with frequencies in the range (fmin,fax).
-    :type freq_range: iterable,float,optional
 
     :param pool: a Pool object with ``map()``, ``close()`` , and ``join()`` methods such as multiprocessing.Pool or schwimmbad.MPIPool.
          If supplied, the grid will be calculated in parallel. 
@@ -146,7 +206,7 @@ def get_default_parameters():
         "h+": 0.0,
         "linewidth": 1.0,
         "fmin": 0.0,
-        "fmax": 3.0e7,
+        "fmax": 1000.0,
         "geometry":1
     }
     return parameters
@@ -169,18 +229,47 @@ def get_example_grid_parameters():
         "h+": 0.0,
         "linewidth": 1.0,
         "fmin": 0.0,
-        "fmax": 3.0e7,
+        "fmax": 800.0,
         "geometry":1
     }
     return parameters
 
+def get_transition_table(molfile):
+    """
+    Reads a collisional data file and returns a pandas DataFrame for the molecule with one row per transition containing the Einstein coefficients, upper level energy and frequency.
+
+    :param molfile: Either the full path to a collisional datafile or the filename of one supplied with SpectralRadex
+    :type molfile: str
+
+    """
+    molfile=add_data_path(molfile)
+    with open(molfile) as f:
+        f.readline()
+        molecule=f.readline()
+        f.readline()
+        mass=f.readline()
+        f.readline()
+        levels=int(f.readline())
+        f.readline()
+
+        for i in range(levels):
+            f.readline()
+        f.readline()
+        n_transitions=int(f.readline())
+        f.readline()
+        line_df=DataFrame(columns=["Upper level","Lower level","Aij","Frequency","E_u"])
+        for i in range(n_transitions):
+            line_df.loc[len(line_df)]=f.readline().split()[1:6]
+    line_df[["Aij","Frequency","E_u"]]=line_df[["Aij","Frequency","E_u"]].astype(float)
+    return line_df
+
 
 def add_data_path(filename):
-    """
-    Adds the path to the packaged datafiles to a filename.
-    :meta private:
-    """
-    return os.path.join(_ROOT, "data", filename)
+    #Adds the path to the packaged datafiles to a filename.
+    if filename[0] not in ["~",".","/"]:
+        return os.path.join(_ROOT, "data", filename)
+    else:
+        return filename
 
 
 def list_data_files():
@@ -193,3 +282,14 @@ def list_data_files():
 
 def is_iter(x):
     return hasattr(x, '__iter__')
+
+def format_run_for_grid(line_count, parameters, target_value, columns,grid_variables, grid_parameters):
+    #Simple function to set up and reformat the output of :func:`run` for :func:`run_grid`
+    for i,variable in enumerate(grid_variables):
+        parameters[variable] = grid_parameters[i]
+    radex_output = run(parameters)
+    if radex_output is not None:
+        transition_value = radex_output.iloc[:line_count][target_value].to_list()
+    else:
+        transition_value=[np.nan]*line_count
+    return DataFrame([[parameters[x] for x in grid_variables] + transition_value], columns=columns)

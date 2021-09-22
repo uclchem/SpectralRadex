@@ -4,7 +4,9 @@ USE Solver
 IMPLICIT NONE
 
 CONTAINS
-  SUBROUTINE ReadData
+  SUBROUTINE ReadData(success)
+    INTEGER, INTENT(INOUT) :: success
+
     ! Reads molecular data files (2003 format)
 
     INTEGER :: ilev,jlev   ! to loop over energy levels
@@ -46,8 +48,16 @@ CONTAINS
     READ(11,*) 
     READ(11,*) nlev
 
-    IF (nlev.lt.1) stop 'error: too few energy levels defined' 
-    IF (nlev.gt.maxlev) stop 'error: too many energy levels defined' 
+    IF (nlev.lt.1) THEN
+      WRITE(*,*) 'error: too few energy levels defined'
+      success=0
+      RETURN
+    END IF
+    IF (nlev.gt.maxlev) THEN
+      WRITE(*,*) 'error: too many energy levels defined' 
+      success=0
+      RETURN
+    END IF
     IF (debug) write(*,*) 'readdata: basics'
 
     ! Term energies and statistical weights
@@ -229,7 +239,10 @@ CONTAINS
 
     IF (.not.found) THEN
      WRITE(*,*)'*** Warning: No rates found for any collision partner'
-     stop
+     WRITE(*,*)'It is likely your parameter dictionary does not have a non-zero density for any partner'
+     WRITE(*,*)'in the collisional data file'
+     success=0
+     RETURN
     END IF
 
     !$$$      IF (debug) THEN

@@ -15,6 +15,7 @@ For the second purpose, we use the RADEX calculated line opacities and excitatio
    user/install
    user/formalism
    user/referencing
+   user/trouble
 
 .. toctree::
 	:maxdepth: 1

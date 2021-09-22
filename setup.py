@@ -19,9 +19,11 @@ else:
     ext_mods=[]
     data_files=[]
 
+
+exec(open('src/spectralradex/version.py').read())
 setup(
     name="spectralradex", # Replace with your own username
-    version="0.3.2",
+    version=__version__,
     author="Jonathan Holdship",
     author_email="jonholdship@gmail.com",
     description="A package for RADEX and spectral modelling",
@@ -33,7 +35,7 @@ setup(
     packages=setuptools.find_packages(where='src'),
     data_files=data_files,
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",

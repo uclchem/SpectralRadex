@@ -1,0 +1,36 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+subroutine from_params(molfilein,tkinin,tbgin,cdmolin,densityin,linewidthin,fminin,fmaxin,geometryin,success_flag,nlines,qup,qlow,lineoutputs) ! in wrap.f90
+    use io
+    use solver
+    use background
+    character*(*) :: molfilein
+    double precision intent(in) :: tkinin
+    double precision intent(in) :: tbgin
+    double precision intent(in) :: cdmolin
+    double precision dimension(7),intent(in) :: densityin
+    double precision intent(in) :: linewidthin
+    double precision intent(in) :: fminin
+    double precision intent(in) :: fmaxin
+    integer intent(in) :: geometryin
+    integer intent(out) :: success_flag
+    integer intent(out) :: nlines
+    character(len=6) dimension(3000),intent(out) :: qup
+    character(len=6) dimension(3000),intent(out) :: qlow
+    double precision dimension(10,500),intent(out) :: lineoutputs
+end subroutine from_params
+subroutine from_dict(inputdictionary,success_flag,nlines,qup,qlow,lineoutputs) ! in wrap.f90
+    use io
+    use solver
+    use background
+    character*(*) intent(in) :: inputdictionary
+    integer intent(out) :: success_flag
+    integer intent(out) :: nlines
+    character(len=6) dimension(3000),intent(out) :: qup
+    character(len=6) dimension(3000),intent(out) :: qlow
+    double precision dimension(10,500),intent(out) :: lineoutputs
+end subroutine from_dict
+
+! This file was auto-generated with f2py (version:2).
+! See http://cens.ioc.ee/projects/f2py2e/
