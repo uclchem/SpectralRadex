@@ -6,6 +6,7 @@ import os
 
 _ROOT = os.path.dirname(os.path.abspath(__file__))
 
+PARTNER_LIST={1:"h2",2:"p-h2",3:"o-h2", 4:"e-", 5:"h", 6:"he",7:"h+"}
 
 def run(parameters, output_file=None):
     """
@@ -188,8 +189,7 @@ def get_default_parameters():
     Get the default RADEX parameters as a dictionary, this largely serves as an example for the
     input required for :func:`run`.
 
-    molfile can be a complete path to a collisional datafile in the LAMDA database format or one of the files
-    listed by :func:`list_data_files`.
+    molfile should be a collsional datafile in the LAMDA database format. If using a local file, the path should begin with ".", "/" or "~". Otherwise, one of the files listed by :func:`list_data_files` can be supplied without a path.
 
     method is 1 (uniform sphere), 2 (LVG), or 3 (slab)
     """
@@ -263,6 +263,39 @@ def get_transition_table(molfile):
     line_df[["Aij","Frequency","E_u"]]=line_df[["Aij","Frequency","E_u"]].astype(float)
     return line_df
 
+
+def get_collisional_partners(molfile):
+    """
+    Reads a collisional data file and returns a dictionary containing the number of collisional partners and their names. The partner names match the input keys for :func:`run`
+    
+    :param molfile: Either the full path to a collisional datafile or the filename of one supplied with SpectralRadex
+    :type molfile: str
+    """
+    partners=[]
+    molfile=add_data_path(molfile)
+    with open(molfile) as f:
+        for i in range(5):
+            f.readline()
+        levels=int(f.readline())
+        for i in range(levels+2):
+            f.readline()
+        n_transitions=int(f.readline())
+        for i in range(n_transitions+2):
+            f.readline()
+        n_partners=int(f.readline())   
+        for i in range(n_partners):
+            f.readline()
+            partner=f.readline()
+            partner=int(partner.split()[0])
+            f.readline()
+            transitions=int(f.readline())
+            for j in range(5+transitions):
+                f.readline()
+            partners.append(PARTNER_LIST[partner])
+                        
+    result={"Number":n_partners,"Partners":partners}
+
+    return result
 
 def add_data_path(filename):
     #Adds the path to the packaged datafiles to a filename.
