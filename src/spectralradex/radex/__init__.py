@@ -50,8 +50,8 @@ def run_params(molfile,tkin,cdmol,nh=0.0,nh2=0.0,op_ratio=3.0,ne=0.0,nhe=0.0,nhx
     """
     Run a single RADEX model from individual parameters
 
-    :param molfile: Either the full path, starting from . or / to a datafile in the Lamda database
-                    format or the filename of a datafile from `list_data_files()`.
+    :param molfile: Either a full path or a relative path beginning with "." to a datafile in the Lamda database
+                    format. Alternatively, the filename of a datafile from `list_data_files()`.
     :type molfile: str
 
     :param tkin: Temperature of the Gas in Kelvin
@@ -127,7 +127,8 @@ def run_grid(parameters,
 
     :param parameters: A dictionary of parameters as provided by :func:`get_default_parameters` or :func:`get_example_grid_parameters`. Parameters should take a single value when they are constant over the grid and contain and interable if they are to be varied.
 
-    :param molfile: Collisional data file for the molecule for which the emission should be calculated.
+    :param molfile: Either a full path or a relative path beginning with "." to a datafile in the Lamda database
+                    format. Alternatively, the filename of a datafile from `list_data_files()`.
     :type molfile: str
 
     :param target_value: RADEX output column to be returned. Select one of 'T_R (K)', 'FLUX (K*km/s)', 'FLUX (erg/cm2/s)'
@@ -189,7 +190,7 @@ def get_default_parameters():
     Get the default RADEX parameters as a dictionary, this largely serves as an example for the
     input required for :func:`run`.
 
-    molfile should be a collsional datafile in the LAMDA database format. If using a local file, the path should begin with ".", "/" or "~". Otherwise, one of the files listed by :func:`list_data_files` can be supplied without a path.
+    molfile should be a collsional datafile in the LAMDA database format. If using a local file, a full path or a relative path  beginning with "." is required. Otherwise, one of the files listed by :func:`list_data_files` can be supplied without a path.
 
     method is 1 (uniform sphere), 2 (LVG), or 3 (slab)
     """
@@ -299,10 +300,10 @@ def get_collisional_partners(molfile):
 
 def add_data_path(filename):
     #Adds the path to the packaged datafiles to a filename.
-    if filename[0] not in ["~",".","/"]:
-        return os.path.join(_ROOT, "data", filename)
-    else:
+    if (os.path.isabs(filename)) or (filename[0] == "."):
         return filename
+    else:
+        return os.path.join(_ROOT, "data", filename)
 
 
 def list_data_files():

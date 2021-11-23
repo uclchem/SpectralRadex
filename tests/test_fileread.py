@@ -4,3 +4,7 @@ for data_file in ['hcn.dat', 'o-nh3.dat', 'p-h3o+.dat', 'hc3n.dat', 'catom.dat',
     print(data_file)
     coll_dict=radex.get_collisional_partners(data_file)
     print(coll_dict)
+    
+
+table=radex.get_transition_table("../HITs/data/collisional/cn.dat")
+print(table)
