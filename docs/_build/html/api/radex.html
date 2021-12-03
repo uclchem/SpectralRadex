@@ -105,8 +105,8 @@ for a list of possible parameters and <a class="reference internal" href="#spect
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>molfile</strong> (<em>float</em>) – Either the full path, starting from . or / to a datafile in the Lamda database
-format or the filename of a datafile from <cite>list_data_files()</cite>.</p></li>
+<li><p><strong>molfile</strong> (<em>float</em>) – Either a full path or a relative path beginning with “.” to a datafile in the Lamda database
+format. Alternatively, the filename of a datafile from <cite>list_data_files()</cite>.</p></li>
 <li><p><strong>tkin</strong> – Temperature of the Gas in Kelvin</p></li>
 <li><p><strong>cdmol</strong> – Column density of the emitting species in cm <span class="math notranslate nohighlight">\(^{-2}\)</span></p></li>
 <li><p><strong>nh</strong> (<em>float</em><em>, </em><em>optional</em>) – Number density of H atoms</p></li>
@@ -133,7 +133,8 @@ format or the filename of a datafile from <cite>list_data_files()</cite>.</p></l
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>parameters</strong> – A dictionary of parameters as provided by <a class="reference internal" href="#spectralradex.radex.get_default_parameters" title="spectralradex.radex.get_default_parameters"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_default_parameters()</span></code></a> or <a class="reference internal" href="#spectralradex.radex.get_example_grid_parameters" title="spectralradex.radex.get_example_grid_parameters"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_example_grid_parameters()</span></code></a>. Parameters should take a single value when they are constant over the grid and contain and interable if they are to be varied.</p></li>
-<li><p><strong>molfile</strong> (<em>str</em>) – Collisional data file for the molecule for which the emission should be calculated.</p></li>
+<li><p><strong>molfile</strong> (<em>str</em>) – Either a full path or a relative path beginning with “.” to a datafile in the Lamda database
+format. Alternatively, the filename of a datafile from <cite>list_data_files()</cite>.</p></li>
 <li><p><strong>target_value</strong> (<em>str</em><em>,</em><em>optional</em>) – RADEX output column to be returned. Select one of ‘T_R (K)’, ‘FLUX (K*km/s)’, ‘FLUX (erg/cm2/s)’</p></li>
 <li><p><strong>pool</strong> (<em>Pool</em><em>, </em><em>optional</em>) – a Pool object with <code class="docutils literal notranslate"><span class="pre">map()</span></code>, <code class="docutils literal notranslate"><span class="pre">close()</span></code> , and <code class="docutils literal notranslate"><span class="pre">join()</span></code> methods such as multiprocessing.Pool or schwimmbad.MPIPool.
 If supplied, the grid will be calculated in parallel.</p></li>
@@ -147,8 +148,7 @@ If supplied, the grid will be calculated in parallel.</p></li>
 <span class="sig-prename descclassname"><span class="pre">spectralradex.radex.</span></span><span class="sig-name descname"><span class="pre">get_default_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spectralradex.radex.get_default_parameters" title="Permalink to this definition"></a></dt>
 <dd><p>Get the default RADEX parameters as a dictionary, this largely serves as an example for the
 input required for <a class="reference internal" href="#spectralradex.radex.run" title="spectralradex.radex.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a>.</p>
-<p>molfile can be a complete path to a collisional datafile in the LAMDA database format or one of the files
-listed by <a class="reference internal" href="#spectralradex.radex.list_data_files" title="spectralradex.radex.list_data_files"><code class="xref py py-func docutils literal notranslate"><span class="pre">list_data_files()</span></code></a>.</p>
+<p>molfile should be a collsional datafile in the LAMDA database format. If using a local file, a full path or a relative path  beginning with “.” is required. Otherwise, one of the files listed by <a class="reference internal" href="#spectralradex.radex.list_data_files" title="spectralradex.radex.list_data_files"><code class="xref py py-func docutils literal notranslate"><span class="pre">list_data_files()</span></code></a> can be supplied without a path.</p>
 <p>method is 1 (uniform sphere), 2 (LVG), or 3 (slab)</p>
 </dd></dl>
 
@@ -165,6 +165,30 @@ listed by <a class="reference internal" href="#spectralradex.radex.list_data_fil
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>molfile</strong> (<em>str</em>) – Either the full path to a collisional datafile or the filename of one supplied with SpectralRadex</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="spectralradex.radex.get_collisional_partners">
+<span class="sig-prename descclassname"><span class="pre">spectralradex.radex.</span></span><span class="sig-name descname"><span class="pre">get_collisional_partners</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">molfile</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spectralradex.radex.get_collisional_partners" title="Permalink to this definition"></a></dt>
+<dd><p>Reads a collisional data file and returns a dictionary containing the number of collisional partners and their names. The partner names match the input keys for <a class="reference internal" href="#spectralradex.radex.run" title="spectralradex.radex.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>molfile</strong> (<em>str</em>) – Either the full path to a collisional datafile or the filename of one supplied with SpectralRadex</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="spectralradex.radex.thermal_h2_op_ratio">
+<span class="sig-prename descclassname"><span class="pre">spectralradex.radex.</span></span><span class="sig-name descname"><span class="pre">thermal_h2_op_ratio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tkin</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spectralradex.radex.thermal_h2_op_ratio" title="Permalink to this definition"></a></dt>
+<dd><p>If your data file has collisions with p-h2 and o-h2 but you only provide the h2 density, RADEX
+splits the h2 density according to the thermal ortho:para ratio. You can check that value for any
+given temperature with this function. Returns the ortho:para ratio as a float</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tkin</strong> (<em>float</em>) – Gas kinetic temperature</p>
 </dd>
 </dl>
 </dd></dl>

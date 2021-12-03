@@ -60,7 +60,7 @@ observations: the frequency bins you observed and the assume
 
 .. parsed-literal::
 
-    /home/jon/.local/lib/python3.7/site-packages/spectralradex/__init__.py:84: RuntimeWarning: invalid value encountered in true_divide
+    /home/jon/.local/lib/python3.8/site-packages/spectralradex/__init__.py:178: RuntimeWarning: invalid value encountered in true_divide
       rad_weights=np.sum(rad_weights,axis=0)/taus
 
 
@@ -90,7 +90,7 @@ assume for all line in SpectralRadex.
 
 .. parsed-literal::
 
-    /home/jon/.local/lib/python3.7/site-packages/spectralradex/__init__.py:84: RuntimeWarning: invalid value encountered in true_divide
+    /home/jon/.local/lib/python3.8/site-packages/spectralradex/__init__.py:178: RuntimeWarning: invalid value encountered in true_divide
       rad_weights=np.sum(rad_weights,axis=0)/taus
 
 
@@ -117,7 +117,7 @@ Here we repeat the above calculation with a 50 MHz frequency spacing.
 
 .. parsed-literal::
 
-    /home/jon/.local/lib/python3.7/site-packages/spectralradex/__init__.py:84: RuntimeWarning: invalid value encountered in true_divide
+    /home/jon/.local/lib/python3.8/site-packages/spectralradex/__init__.py:178: RuntimeWarning: invalid value encountered in true_divide
       rad_weights=np.sum(rad_weights,axis=0)/taus
 
 

@@ -121,12 +121,29 @@ parameters RADEX expects. An example can be obtained using the
     <span class="n">h</span><span class="o">+</span> <span class="p">:</span> <span class="mf">0.0</span>
     <span class="n">linewidth</span> <span class="p">:</span> <span class="mf">1.0</span>
     <span class="n">fmin</span> <span class="p">:</span> <span class="mf">0.0</span>
-    <span class="n">fmax</span> <span class="p">:</span> <span class="mf">30000000.0</span>
+    <span class="n">fmax</span> <span class="p">:</span> <span class="mf">1000.0</span>
     <span class="n">geometry</span> <span class="p">:</span> <span class="mi">1</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>and then we pass that to the <code class="docutils literal notranslate"><span class="pre">run()</span></code> function.</p>
+<p>Note that each possible collisional partner has a separated entry for
+its density. You can check the collisional partners in your datafile
+with <code class="docutils literal notranslate"><span class="pre">get_collisional_partners</span></code>()</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">radex</span><span class="o">.</span><span class="n">get_collisional_partners</span><span class="p">(</span><span class="s2">&quot;co.dat&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;Number&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;Partners&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;p-h2&#39;</span><span class="p">,</span> <span class="s1">&#39;o-h2&#39;</span><span class="p">]}</span>
+</pre></div>
+</div>
+<p>You only need to provide densities for the partners you wish to include
+in the calculation but you must include at least one of the partners.
+Two species cases are:</p>
+<ul class="simple">
+<li><p>RADEX will use the thermal ortho:para ratio to assign values to o-h2 and p-h2 in the case that you provide only the H2 density.</p></li>
+<li><p>A small number of datafiles have p-H2 collsions only and you may wish to place your total h2 density in that entry to approximate the o-h2 collisions</p></li>
+</ul>
+<p>Once your parameter dictionary is set up, we pass that to the <code class="docutils literal notranslate"><span class="pre">run()</span></code>
+function.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">output</span> <span class="o">=</span> <span class="n">radex</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
 <span class="n">output</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
@@ -271,7 +288,7 @@ output for all combinations of the three iterables.</p>
  <span class="s1">&#39;h+&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
  <span class="s1">&#39;linewidth&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
  <span class="s1">&#39;fmin&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
- <span class="s1">&#39;fmax&#39;</span><span class="p">:</span> <span class="mf">30000000.0</span><span class="p">,</span>
+ <span class="s1">&#39;fmax&#39;</span><span class="p">:</span> <span class="mf">800.0</span><span class="p">,</span>
  <span class="s1">&#39;geometry&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
 </pre></div>
 </div>
@@ -282,7 +299,7 @@ output for all combinations of the three iterables.</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;run_grid took </span><span class="si">{</span><span class="n">toc</span><span class="o">-</span><span class="n">tic</span><span class="si">:</span><span class="s2">0.4f</span><span class="si">}</span><span class="s2"> seconds without a pool&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">run_grid</span> <span class="n">took</span> <span class="mf">3.0571</span> <span class="n">seconds</span> <span class="n">without</span> <span class="n">a</span> <span class="n">pool</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">run_grid</span> <span class="n">took</span> <span class="mf">2.8573</span> <span class="n">seconds</span> <span class="n">without</span> <span class="n">a</span> <span class="n">pool</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">grid_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
@@ -382,7 +399,7 @@ Note the time in the example below compared to the grid above.</p>
 <span class="n">grid_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">run_grid</span> <span class="n">took</span> <span class="mf">0.7459</span> <span class="n">seconds</span> <span class="k">with</span> <span class="n">a</span> <span class="n">pool</span> <span class="n">of</span> <span class="mi">8</span> <span class="n">workers</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">run_grid</span> <span class="n">took</span> <span class="mf">0.7338</span> <span class="n">seconds</span> <span class="k">with</span> <span class="n">a</span> <span class="n">pool</span> <span class="n">of</span> <span class="mi">8</span> <span class="n">workers</span>
 </pre></div>
 </div>
 <div>

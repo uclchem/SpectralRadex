@@ -8,7 +8,7 @@ for fn in glob.glob("../examples/*.ipynb"):
     outfn = os.path.join("tutorials", name + ".rst")
     print("Building {0}...".format(name))
     subprocess.check_call(
-        "jupyter nbconvert --template _templates/tutorial_rst --to rst "
+        "jupyter nbconvert --template _templates/tutorial_rst.tpl --to rst "
         + fn
         + " --output-dir tutorials",
         shell=True,)

@@ -14,8 +14,18 @@ output = radex.run(params)
 print(output)
 params = radex.get_default_parameters()
 
+#try to exceed temperature limit
 params["tkin"]=1e5
 output=radex.run(params)
+print(output)
+
+
+# Try with no collisional partners
+params["tkin"]=20.0
+params["h2"]=0.0
+params["e-"]=100
+output=radex.run(params)
+print(output)
 
 # # Usage example of run_grid() method and how to use or not use multiprocessing with it.
 

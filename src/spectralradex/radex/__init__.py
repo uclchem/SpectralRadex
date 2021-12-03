@@ -298,6 +298,18 @@ def get_collisional_partners(molfile):
 
     return result
 
+def thermal_h2_op_ratio(tkin):
+    """
+    If your data file has collisions with p-h2 and o-h2 but you only provide the h2 density, RADEX
+    splits the h2 density according to the thermal ortho:para ratio. You can check that value for any 
+    given temperature with this function. Returns the ortho:para ratio as a float
+
+    :param tkin: Gas kinetic temperature
+    :type tkin: float
+
+    """
+    return np.min(3.0,9.0*np.exp(-170.6/tkin))
+
 def add_data_path(filename):
     #Adds the path to the packaged datafiles to a filename.
     if (os.path.isabs(filename)) or (filename[0] == "."):

@@ -623,10 +623,5 @@ CONTAINS
     fmin = dmax1(0.d0,fmin)
     fmax = dmin1(3.d7,fmax)
 
-
-    !Add ortho and para H2 densities if applicable
-    IF ((density(2).gt.0.0).or.(density(3).gt.0.0)) &
-      &density(1)=density(2)+density(3)
-    Return
   END SUBROUTINE ParseInputDictionary
 END MODULE IO

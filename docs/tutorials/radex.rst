@@ -46,12 +46,38 @@ parameters RADEX expects. An example can be obtained using the
     	h+ : 0.0
     	linewidth : 1.0
     	fmin : 0.0
-    	fmax : 30000000.0
+    	fmax : 1000.0
     	geometry : 1
     }
 
 
-and then we pass that to the ``run()`` function.
+Note that each possible collisional partner has a separated entry for
+its density. You can check the collisional partners in your datafile
+with ``get_collisional_partners``\ ()
+
+.. code:: python
+
+    radex.get_collisional_partners("co.dat")
+
+
+
+
+.. parsed-literal::
+
+    {'Number': 2, 'Partners': ['p-h2', 'o-h2']}
+
+
+
+You only need to provide densities for the partners you wish to include
+in the calculation but you must include at least one of the partners.
+Two species cases are:
+
+- RADEX will use the thermal ortho:para ratio to assign values to o-h2 and p-h2 in the case that you provide only the H2 density.
+
+- A small number of datafiles have p-H2 collsions only and you may wish to place your total h2 density in that entry to approximate the o-h2 collisions
+
+Once your parameter dictionary is set up, we pass that to the ``run()``
+function.
 
 .. code:: python
 
@@ -217,7 +243,7 @@ We’ll use an example grid which can be acquired using the
      'h+': 0.0,
      'linewidth': 1.0,
      'fmin': 0.0,
-     'fmax': 30000000.0,
+     'fmax': 800.0,
      'geometry': 1}
 
 
@@ -233,7 +259,7 @@ We’ll use an example grid which can be acquired using the
 
 .. parsed-literal::
 
-    run_grid took 3.0571 seconds without a pool
+    run_grid took 2.8573 seconds without a pool
 
 
 .. code:: python
@@ -350,7 +376,7 @@ Note the time in the example below compared to the grid above.
 
 .. parsed-literal::
 
-    run_grid took 0.7459 seconds with a pool of 8 workers
+    run_grid took 0.7338 seconds with a pool of 8 workers
 
 
 

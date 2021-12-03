@@ -35,7 +35,7 @@ In this case, SpectralRadex wants the libgfortran.5.dylib library and can't find
 
     locate libgfortran.5.dylib
 
-which will tell you the actual location of the required library and then you can link it to the expected location.
+which will tell you the actual location of the required library and then you can create a symbolic link to the expected location.
 
 .. code:: python
 
