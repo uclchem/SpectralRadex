@@ -72,7 +72,7 @@ You only need to provide densities for the partners you wish to include
 in the calculation but you must include at least one of the partners.
 Two species cases are:
 
-- RADEX will use the thermal ortho:para ratio to assign values to o-h2 and p-h2 in the case that you provide only the H2 density.
+- RADEX will sum the o-h2 and p-h2 density values to produce a h2 value.
 
 - A small number of datafiles have p-H2 collsions only and you may wish to place your total h2 density in that entry to approximate the o-h2 collisions
 

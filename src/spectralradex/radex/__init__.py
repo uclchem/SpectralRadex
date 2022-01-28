@@ -140,10 +140,9 @@ def run_grid(parameters,
     """
 
     #cleaning up and checking inputs
-    if type(target_value) != str:
-        if (target_value != "T_R (K)" or target_value != "FLUX (K*km/s)" or target_value != "FLUX (erg/cm2/s)"):
-            print("target_value must be a string and one of the following three options: 'T_R (K)', 'FLUX (K*km/s)', 'FLUX (erg/cm2/s)'")
-            exit()
+    possible_targets=[ 'T_ex', 'tau', 'T_R (K)', 'POP UP','POP LOW', 'FLUX (K*km/s)', 'FLUX (erg/cm2/s)']
+    if target_value not in possible_targets:
+        raise ValueError(f"target_value must be a string and one of the following options:\n'"+"'\n'".join(possible_targets)+"'")
     if parameters["molfile"][0] != "/":
         parameters["molfile"] = add_data_path(parameters["molfile"])
 
@@ -300,8 +299,7 @@ def get_collisional_partners(molfile):
 
 def thermal_h2_op_ratio(tkin):
     """
-    If your data file has collisions with p-h2 and o-h2 but you only provide the h2 density, RADEX
-    splits the h2 density according to the thermal ortho:para ratio. You can check that value for any 
+    If your data file has collisions with p-h2 and o-h2, you may want to use the thermal ratio to split your total H2 density. You can check that value for any 
     given temperature with this function. Returns the ortho:para ratio as a float
 
     :param tkin: Gas kinetic temperature

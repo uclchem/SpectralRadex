@@ -1,45 +1,38 @@
-import numpy as np
 from spectralradex import radex
-from pandas import DataFrame, concat
-from multiprocessing import pool
-from functools import partial
+from multiprocessing import Pool
 
 import time
 
 # Single run using just the basic run() method from Spectral Radex
 
 params = radex.get_default_parameters()
-params["molfile"] = "co.dat"
-output = radex.run(params)
-print(output)
-params = radex.get_default_parameters()
+# params["molfile"] = "co.dat"
+# output = radex.run(params)
+# print(output)
+# params = radex.get_default_parameters()
 
-#try to exceed temperature limit
-params["tkin"]=1e5
-output=radex.run(params)
-print(output)
+# #try to exceed temperature limit
+# params["tkin"]=1e5
+# output=radex.run(params)
+# print(output)
 
 
-# Try with no collisional partners
-params["tkin"]=20.0
-params["h2"]=0.0
-params["e-"]=100
-output=radex.run(params)
-print(output)
+# # Try with no collisional partners
+# params["tkin"]=20.0
+# params["h2"]=0.0
+# params["e-"]=100
+# output=radex.run(params)
+# print(output)
 
-# # Usage example of run_grid() method and how to use or not use multiprocessing with it.
-
-# tic = time.perf_counter()
-# grid_DF = radex.run_grid(density_values=np.arange(1.0e5, 1.0e6, 1.0e5), temperature_values=np.arange(10, 100, 10),
-#                    column_density_values=np.arange(1.0e14, 1.0e15, 1.0e14), molfile='co.dat',
-#                    target_value="T_R (K)", pool=None)
-# toc = time.perf_counter()
-# print(f"run_grid took {toc-tic:0.4f} seconds without a pool")
-
-# tic = time.perf_counter()
-# grid_DF_pool = radex.run_grid(density_values=np.arange(1.0e5, 1.0e6, 1.0e5), temperature_values=np.arange(10, 100, 10),
-#                    column_density_values=np.arange(1.0e14, 1.0e15, 1.0e14), molfile='co.dat',
-#                    target_value="T_R (K)", pool=pool.Pool())
-# toc = time.perf_counter()
-# print(f"run_grid took {toc-tic:0.4f} seconds with a pool of 4 workers")
-# print(grid_DF_pool.head())
+# # check run_grid() method and how to use or not use multiprocessing with it.
+params["tkin"]=[10,50]
+res=radex.run_grid(params,
+             target_value="FLUX (K*km/s)", pool=Pool(4))
+print(res)
+try:
+    res=radex.run_grid(params,
+                 target_value=1, pool=Pool(4))
+except:
+    pass
+res=radex.run_grid(params, target_value="FLUXy (K*km/s)", pool=Pool(4))
+print(res)
