@@ -22,6 +22,7 @@ src/spectralradex/radex/data/catom.dat
 src/spectralradex/radex/data/ch2_h2_ortho.dat
 src/spectralradex/radex/data/ch2_h2_para.dat
 src/spectralradex/radex/data/co.dat
+src/spectralradex/radex/data/cs@lique.dat
 src/spectralradex/radex/data/hc3n.dat
 src/spectralradex/radex/data/hcl.dat
 src/spectralradex/radex/data/hcl@hfs.dat

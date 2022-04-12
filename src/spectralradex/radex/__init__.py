@@ -322,7 +322,8 @@ def list_data_files():
     This function prints the list of available files. You can provide the full path to another
     file in the parameter dictionary to use one not packaged with SpectralRadex.
     """
-    print(os.listdir(os.path.join(_ROOT, "data")))
+    files=sorted(os.listdir(os.path.join(_ROOT, "data")))
+    print(files)
 
 def is_iter(x):
     return hasattr(x, '__iter__')

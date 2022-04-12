@@ -15,12 +15,22 @@ SpectralRadex can return results for up to 500 transitions. This number is hard 
 
 which can be resolved by setting fmin and fmax such that there are fewer than 500 transitions in the range of interest. If you require more than 500 transitions, please contact us via github or email.
 
+pip cannot find version
+-----------------------
+**Could not find a version that satisfies the requirement spectralradex**
+
+If you get an error like this when trying to install spectralradex, you may need to install it from source. This can be done by running
+
+.. code:: shell
+    git clone https://github.com/uclchem/SpectralRadex.git
+    pip install ./SpectralRadex
+
+
+This happens because we use Github Actions to pre-build the library for various python versions and OS combinations. Not every combination is possible and so if your combination doesn't exist, you need to build it from source.
+
 Mac Issues
 -----------
 **Import Error... library not loaded**
-
-
-
 
 
 Recent updates to Mac OS have resulted in many Mac user's python distributions expecting the standard Fortran libraries to be in one place when they're actually in another. The resulting error message looks like
