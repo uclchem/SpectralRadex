@@ -22,6 +22,7 @@ pip cannot find version
 If you get an error like this when trying to install spectralradex, you may need to install it from source. This can be done by running
 
 .. code:: shell
+    
     git clone https://github.com/uclchem/SpectralRadex.git
     pip install ./SpectralRadex
 
