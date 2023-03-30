@@ -11,9 +11,9 @@ jobs:
         os: [ubuntu-18.04, windows-latest,macos-latest]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v3
         name: Install Python
         with:
           python-version: '3.9'
@@ -31,6 +31,6 @@ jobs:
         run: |
           python -m cibuildwheel --output-dir wheelhouse
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@3
         with:
           path: ./wheelhouse/*.whl
