@@ -8,7 +8,15 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-18.04, windows-latest,macos-latest]
+        include:
+          - os: ubuntu-22.04
+            cibw_archs: "native"
+          - os: ubuntu-22.04
+            cibw_archs: "aarch64"
+          - os: windows-latest
+            cibw_archs: "native ARM64"
+          - os: macos-latest
+            cibw_archs: "native arm64"
 
     steps:
       - uses: actions/checkout@v3
@@ -24,7 +32,7 @@ jobs:
 
       - name: Build wheels
         env: 
-          CIBW_BUILD: cp36-* cp37-* cp38-* cp39-* cp310-*
+          CIBW_BUILD: cp36-* cp37-* cp38-* cp39-* cp310-* cp311-*
           CI_BEFORE_ALL_LINUX: sudo apt-get install gfortran
           CIBW_BEFORE_ALL_MACOS: brew install gcc && brew reinstall gfortran
           CIBW_BEFORE_BUILD: "pip install numpy"
