@@ -36,6 +36,7 @@ jobs:
           CI_BEFORE_ALL_LINUX: sudo apt-get install gfortran
           CIBW_BEFORE_ALL_MACOS: brew install gcc && brew reinstall gfortran
           CIBW_BEFORE_BUILD: "pip install numpy"
+          CIBW_ARCHS_MACOS: x86_64 arm64
         run: |
           python -m cibuildwheel --output-dir wheelhouse
 
