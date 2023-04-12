@@ -29,11 +29,8 @@ def run(parameters, output_file=None):
     success,nlines, qup, qlow, output = from_dict(parameters)
     if success==1:
         output = DataFrame(columns=columns, data=output[:, :nlines].T)
-        output["QN Upper"] = qup.reshape(-1, 6).view('S6')[:nlines]
-        output["QN Lower"] = qlow.reshape(-1, 6).view('S6')[:nlines]
-        output["Qup"] = output["QN Upper"].map(lambda x: x.decode('UTF-8')).str.strip()
-        output["Qlow"] = output["QN Lower"].map(lambda x: x.decode('UTF-8')).str.strip()
-        output=output.drop(["QN Upper","QN Lower"],axis=1)
+        output["Qup"] = [q.decode("UTF-8").strip() for q in qup][:nlines]
+        output["Qlow"] = [q.decode("UTF-8").strip() for q in qlow][:nlines]
         output=output[output["freq"]>parameters["fmin"]]
         output=output[output["freq"]<parameters["fmax"]]
 
