@@ -22,7 +22,7 @@ IMPLICIT NONE
     !Main program: controls program flow and drives subroutines
     CHARACTER(*) :: molfileIn
     INTEGER :: niter,nlines,success_flag,iline,geometryIn   ! iteration counters
-    DOUBLE PRECISION :: tkinIn,tbgIn,cdmolIn,densityIn(7),lineOutputs(10,500)
+    DOUBLE PRECISION :: tkinIn,tbgIn,cdmolIn,densityIn(7),lineOutputs(10,5000)
     DOUBLE PRECISION :: linewidthIn,fminIn,fmaxIn
     CHARACTER(6) :: Qup(3000),Qlow(3000)
     LOGICAL :: conv    ! are we converged?
@@ -98,7 +98,7 @@ IMPLICIT NONE
     !Main program: controls program flow and drives subroutines
     CHARACTER(*) :: inputDictionary
     INTEGER :: niter,nlines,success_flag,iline   ! iteration counters
-    DOUBLE PRECISION :: lineOutputs(10,500)
+    DOUBLE PRECISION :: lineOutputs(10,5000)
     CHARACTER(6) :: Qup(3000),Qlow(3000)
     LOGICAL :: conv    ! are we converged?
     !f2py intent(in) inputDictionary

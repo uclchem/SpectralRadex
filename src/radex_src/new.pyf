@@ -18,7 +18,7 @@ subroutine from_params(molfilein,tkinin,tbgin,cdmolin,densityin,linewidthin,fmin
     integer intent(out) :: nlines
     character(len=6) dimension(3000),intent(out) :: qup
     character(len=6) dimension(3000),intent(out) :: qlow
-    double precision dimension(10,500),intent(out) :: lineoutputs
+    double precision dimension(10,5000),intent(out) :: lineoutputs
 end subroutine from_params
 subroutine from_dict(inputdictionary,success_flag,nlines,qup,qlow,lineoutputs) ! in wrap.f90
     use io
@@ -29,7 +29,7 @@ subroutine from_dict(inputdictionary,success_flag,nlines,qup,qlow,lineoutputs) !
     integer intent(out) :: nlines
     character(len=6) dimension(3000),intent(out) :: qup
     character(len=6) dimension(3000),intent(out) :: qlow
-    double precision dimension(10,500),intent(out) :: lineoutputs
+    double precision dimension(10,5000),intent(out) :: lineoutputs
 end subroutine from_dict
 
 ! This file was auto-generated with f2py (version:2).
