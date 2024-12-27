@@ -3,7 +3,7 @@ USE types
 IMPLICIT NONE
 
     !file for input and output
-    character(200) :: outfile,molfile,specref
+    character(200) :: outfile,molfile,molfileold,specref
     character(*), PARAMETER :: radat='./data/'
     character(*), PARAMETER :: version = '30nov2011'
     character(*), PARAMETER :: logfile = './radex.log'
@@ -115,7 +115,11 @@ IMPLICIT NONE
     ! ctot:  total collision rate 
     ! xpop:  level populations
 
-
+    INTEGER :: id(maxpart)      ! to identify collision partners
+    INTEGER :: lcu(maxpart,maxcoll),lcl(maxpart,maxcoll)
+    REAL(dp) :: coll(maxpart,maxcoll,maxtemp)
+    REAL(dp) :: temp(maxpart,maxtemp) ! collision temperatures
+    character*120 collref ! text about source of collisional data
 
     !For development / maintenance purposes:
     LOGICAL, PARAMETER :: debug =.False.

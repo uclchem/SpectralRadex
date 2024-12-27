@@ -44,7 +44,10 @@ IMPLICIT NONE
 
     IF (success_flag .ne. 1) RETURN
     IF (DEBUG) write(*,*) 'calling readdata'
-    CALL ReadData(success_flag)
+    IF (molfile .ne. molfileold) THEN
+      CALL ReadData(success_flag)
+    END IF
+    CALL InterpColli(success_flag)
     IF (success_flag .ne. 1) RETURN
 
     !     Calculate background radiation field
@@ -88,6 +91,7 @@ IMPLICIT NONE
         niter=niter+1
         END IF
     END DO
+    molfileold=molfile
 END SUBROUTINE from_params
     
 SUBROUTINE from_dict(inputDictionary,success_flag,nlines,Qup,Qlow,lineOutputs)
@@ -111,7 +115,10 @@ IMPLICIT NONE
     !     Read data file
     IF (success_flag .ne. 1) RETURN
     IF (DEBUG) write(*,*) 'calling readdata'
-    CALL ReadData(success_flag)
+    IF (molfile .ne. molfileold) THEN
+      CALL ReadData(success_flag)
+    END IF
+    CALL InterpColli(success_flag)
     IF (success_flag .ne. 1) RETURN
 
     !     Calculate background radiation field
@@ -155,4 +162,5 @@ IMPLICIT NONE
         niter=niter+1
       END IF
     END DO
+    molfileold=molfile
 END SUBROUTINE from_dict

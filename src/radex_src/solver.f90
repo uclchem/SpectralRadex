@@ -32,6 +32,7 @@ Contains
     REAL(dp) :: sumx                  ! summed radiative rate
     REAL(dp) :: total                 ! to normalize populations
     REAL(dp) :: tsum,thistex          ! to check convergence
+    REAL(dp) :: lr                    ! learning rate to solve
 
     LOGICAL :: conv                 ! are we converged?
 
@@ -297,8 +298,13 @@ Contains
     END IF
 
     !sb301111 now DO the underrelaxation!
+    IF(niter.le.20) THEN
+       lr=0.1+0.01*niter
+    else
+       lr=5.0/niter+0.05
+    END IF
     DO ilev=1,nlev
-       xpop(ilev)=0.3*xpop(ilev)+0.7*xpopold(ilev)
+       xpop(ilev)=lr*xpop(ilev)+(1.0-lr)*xpopold(ilev)
     end do
 
     return
@@ -311,17 +317,19 @@ Contains
     REAL(dp) :: EscProb,beta,tau
     REAL(dp) :: taur  !optical radius
 
-    taur = tau/2.0
 
     SELECT CASE (method)
       CASE(1)
         !Uniform sphere formula from Osterbrock (Astrophysics of
         !Gaseous Nebulae and Active Galactic Nuclei) Appendix 2
         !with power law approximations for large and small tau
-        IF (abs(taur).lt.0.1) THEN
+        taur=tau/2.0
+        IF (taur.lt.0) THEN
+          beta=1.0-tau
+        ELSE IF (taur.lt.0.1) THEN
           beta = 1.d0-0.75d0*taur+(taur**2.)/2.5d0&
             &-(taur**3.)/6.d0+(taur**4.)/17.5d0
-        ELSE IF(abs(taur).gt.5.d1) THEN
+        ELSE IF(taur.gt.5.d1) THEN
             beta = 0.75d0/taur
         ELSE
           beta = 0.75d0/taur*(1.d0-1.d0/(2.d0*(taur**2.))+&
@@ -333,25 +341,30 @@ Contains
         !Expanding sphere = Large Velocity Gradient (LVG) or Sobolev case.
         !Formula from De Jong, Boland and Dalgarno (1980, A&A 91, 68)
         !corrected by factor 2 in order to match EscProb(TAU=0)=1
-        IF (abs(taur).lt.0.01) THEN
-          beta = 1.0
-        else if(abs(taur).lt.7.0) THEN
-          beta = 2.0*(1.0 - dexp(-2.34*taur))/(4.68*taur)
-        else
-          beta = 2.0/(taur*4.0*(sqrt(log(taur/sqrt(pi)))))
-        END IF
-
+        taur=2.34*tau
+        IF (taur.lt.0) THEN
+          beta=1.0-tau     
+        ELSE IF (taur.lt.0.01) THEN
+           beta = 1.0-taur/2.0+(taur**2.)/6.d0
+        ELSE IF(taur.gt.5.d1) THEN
+           beta = 1.0/taur
+        ELSE
+           beta = (1.0-dexp(-taur))/taur
+        ENDIF
 
       CASE (3)
         !Slab geometry (e.g., shocks): de Jong, Dalgarno & Chu 1975, 
         !ApJ 199, 69 (again with power law approximations)
-        IF (abs(3.0*tau).lt.0.1) THEN
-          beta = 1.0 - 1.5*(tau + tau**2.)
-        ELSE IF (abs(3.0*tau).gt.50.0) THEN
-          beta = 1.0d0/(3.0*tau)
+        taur=3.0*tau
+        IF (taur.lt.0) THEN
+           beta=1.0-tau     
+        ELSE IF (taur.lt.0.01) THEN
+           beta = 1.0-taur/2.0+(taur**2.)/6.d0
+        ELSE IF(taur.gt.5.d1) THEN
+           beta = 1.0/taur
         ELSE
-          beta = (1.0d0 - dexp(-3.0*tau))/(3.0*tau)
-        END IF
+           beta = (1.0-dexp(-taur))/taur
+        ENDIF
       CASE DEFAULT 
          WRITE(*,*) 'Error: Escape probability method undefined'
          STOP

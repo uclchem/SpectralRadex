@@ -16,19 +16,7 @@ CONTAINS
     INTEGER :: icoll       ! to loop over collisional transitions
     INTEGER :: dummy       ! to skip part of the file
 
-    INTEGER :: id(maxpart)      ! to identify collision partners
-
-    ! upper/lower levels of collisional transition 
-    INTEGER :: lcu(maxcoll),lcl(maxcoll) 
-    REAL(dp) :: coll(maxpart,maxcoll,maxtemp)
-    REAL(dp) :: colld(maxpart,maxlev,maxlev)
-    REAL(dp) :: ediff
-    REAL(dp) :: temp(maxtemp) ! collision temperatures
-
-    character*120 collref ! text about source of collisional data
-
     ! to interpolate rate coeffs
-    INTEGER :: iup,ilo,nint
     REAL(dp) :: tupp,tlow,fint
 
     ! to verify matching of densities and rates
@@ -38,6 +26,7 @@ CONTAINS
     REAL(dp) :: opr
 
     ! Executable part begins here.
+
     OPEN(unit=11,file=molfile,status='old',err=99)
     ! in the header, every second line is a comment
     101 format(a)
@@ -107,44 +96,79 @@ CONTAINS
      IF (ntemp.lt.0) stop 'error: too few collision temperatures defined'
      IF (ntemp.gt.maxtemp) stop 'error: too many collision temperatures'
      READ(11,*)
-     READ(11,*) (temp(itemp),itemp=1,ntemp)
+     READ(11,*) (temp(ipart,itemp),itemp=1,ntemp)
      READ(11,*)
 
      IF (debug) write(*,*) 'ready to read ',ncoll,' rates for '&
             &,ntemp,' temperatures for partner ',ipart
 
      DO icoll=1,ncoll
-        READ(11,*) dummy,lcu(icoll),lcl(icoll),&
+        READ(11,*) dummy,lcu(ipart,icoll),lcl(ipart,icoll),&
                &(coll(ipart,icoll,itemp),itemp=1,ntemp)
      IF ((dummy.lt.1).or.(dummy.gt.ncoll)) stop 'error:illegal collision number'
      END DO
+    END DO
+
+    close(11)
+    RETURN
+    !  IF (debug) WRITE(*,*)'ctot=',(ctot(ilev),ilev=1,nlev)
+    99 write(*,*) 'error opening data file ',molfile
+    STOP
+  END SUBROUTINE ReadData
+
+
+  SUBROUTINE InterpColli(success)
+    INTEGER, INTENT(INOUT) :: success
+
+    ! Reads molecular data files (2003 format)
+
+    INTEGER :: ilev,jlev   ! to loop over energy levels
+    INTEGER :: iline       ! to loop over lines
+    INTEGER :: ipart,jpart ! to loop over collision partners
+    INTEGER :: itemp       ! to loop over collision temperatures
+    INTEGER :: icoll       ! to loop over collisional transitions
+    INTEGER :: dummy       ! to skip part of the file
+
+    ! upper/lower levels of collisional transition
+    REAL(dp) :: ediff
+    REAL(dp) :: colld(maxpart,maxlev,maxlev)
+
+    ! to interpolate rate coeffs
+    INTEGER :: iup,ilo,nint
+    REAL(dp) :: tupp,tlow,fint
+
+    ! to verify matching of densities and rates
+    logical found
+
+    ! to calculate thermal o/p ratio for H2
+    REAL(dp) :: opr
 
     ! interpolate array coll(ncol,ntemp) to desired temperature
 
     ! Must DO this now because generally, rates with different partners
     ! are calculated for a different set of temperatures
-
+    DO ipart=1,npart
      IF (ntemp.le.1) THEN
         DO icoll=1,ncoll
-           iup=lcu(icoll)
-           ilo=lcl(icoll)
+           iup=lcu(ipart,icoll)
+           ilo=lcl(ipart,icoll)
            colld(ipart,iup,ilo)=coll(ipart,icoll,1)
         END DO
      else
-        IF (tkin.gt.temp(1)) THEN
-           IF (tkin.lt.temp(ntemp)) THEN
+        IF (tkin.gt.temp(ipart,1)) THEN
+           IF (tkin.lt.temp(ipart,ntemp)) THEN
     !===  interpolation :
               DO itemp=1,(ntemp-1)
-                 IF (tkin.gt.temp(itemp).and.tkin.le.temp(itemp+1)) nint=itemp
+                 IF (tkin.gt.temp(ipart,itemp).and.tkin.le.temp(ipart,itemp+1)) nint=itemp
               END DO
-              tupp=temp(nint+1)
-              tlow=temp(nint)
+              tupp=temp(ipart,nint+1)
+              tlow=temp(ipart,nint)
               fint=(tkin-tlow)/(tupp-tlow)
     !cc     db
     !c                  write(*,*) 'ipart,nint,fint: ',ipart,nint,fint
               DO icoll=1,ncoll
-                 iup=lcu(icoll)
-                 ilo=lcl(icoll)
+                 iup=lcu(ipart,icoll)
+                 ilo=lcl(ipart,icoll)
                  colld(ipart,iup,ilo)=coll(ipart,icoll,nint)&
                         &+fint*(coll(ipart,icoll,nint+1)&
                         &-coll(ipart,icoll,nint))
@@ -153,25 +177,25 @@ CONTAINS
               END DO
            else
     !===  Tkin too high :
-              ! IF (tkin.ne.temp(ntemp)) THEN
+              ! IF (tkin.ne.temp(ipart,ntemp)) THEN
               !    WRITE(*,*)' Warning : Tkin higher than temperatures '/&
               !         &/'for which rates are present.'
               ! END IF
               DO icoll=1,ncoll
-                 iup=lcu(icoll)
-                 ilo=lcl(icoll)
+                 iup=lcu(ipart,icoll)
+                 ilo=lcl(ipart,icoll)
                  colld(ipart,iup,ilo)=coll(ipart,icoll,ntemp)
               END DO
            END IF
         else
     ! Tkin too low :
-           IF (tkin.ne.temp(1)) THEN
+           IF (tkin.ne.temp(ipart,1)) THEN
               WRITE(*,*)' Warning : Tkin lower than temperatures '//&
                      &'for which rates are present.'
            END IF
            DO icoll=1,ncoll
-              iup=lcu(icoll)
-              ilo=lcl(icoll)
+              iup=lcu(ipart,icoll)
+              ilo=lcl(ipart,icoll)
               colld(ipart,iup,ilo)=coll(ipart,icoll,1)
            END DO
         END IF
@@ -182,8 +206,6 @@ CONTAINS
     END DO
 
     IF (debug) write(*,*) 'readdata: rate coeffs'
-
-    close(11)
 
     !$$$      IF (debug) THEN
     !$$$         WRITE(*,*)colld(1,1,1),colld(1,1,2),colld(1,1,3)
@@ -282,11 +304,7 @@ CONTAINS
     !$$$         WRITE(*,*)crate(2,1),crate(2,2),crate(2,3)
     !$$$         WRITE(*,*)crate(3,1),crate(3,2),crate(3,3)
     !$$$      END IF
-    RETURN
-    !  IF (debug) WRITE(*,*)'ctot=',(ctot(ilev),ilev=1,nlev)
-    99 write(*,*) 'error opening data file ',molfile
-    STOP
-  END SUBROUTINE ReadData
+  END SUBROUTINE InterpColli
 
   SUBROUTINE GetInputs
     INTEGER :: ipart        ! loop over collision partners
